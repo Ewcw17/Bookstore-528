@@ -58,6 +58,7 @@ public class Bookstore extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("login button pressed");
+                primaryStage.setScene(ownerMenu);
             }
         });
         
@@ -74,10 +75,31 @@ public class Bookstore extends Application {
         ownerMenuRoot.getChildren().add(customerBtn);
         ownerMenuRoot.getChildren().add(logoutBtn);
         
-        primaryStage.setTitle("Windowww");
-        primaryStage.setScene(ownerMenu);
-        primaryStage.show();
+        logoutBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Logout Button Pressed");
+                primaryStage.setScene(loginScreen);
+            }
+        });
         
+        
+        //Login button
+        Button booksBtn = new Button();
+        booksBtn.setText("Books");
+        Button customerBtn = new Button();
+        customerBtn.setText("Customers");
+        Button logoutBtn = new Button();
+        logoutBtn.setText("Logout");
+        
+        //placing the elements on screen
+        ownerMenuRoot.getChildren().add(booksBtn);
+        ownerMenuRoot.getChildren().add(customerBtn);
+        ownerMenuRoot.getChildren().add(logoutBtn);
+        
+        primaryStage.setTitle("Windowww");
+        primaryStage.setScene(customerMenu);
+        primaryStage.show();
         
     }
 
