@@ -5,6 +5,7 @@
 package bookstore;
 
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -20,22 +21,26 @@ public class Bookstore extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        Button loginBtn = new Button();
+        loginBtn.setText("Login");
+        
+        Button loginBtn = new Button();
+        loginBtn.setText("Login");
+        
+        loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
+                System.out.println("login button pressed");
             }
         });
         
         StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        root.getChildren().add(loginBtn);
         
-        Scene scene = new Scene(root, 300, 250);
+        Scene scene = new Scene(root, 600, 600);
         
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Windowww");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
