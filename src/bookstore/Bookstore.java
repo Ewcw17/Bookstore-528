@@ -17,13 +17,14 @@ import javafx.stage.Stage;
  *
  * @author e225wong
  */
+
 public class Bookstore extends Application {
     
     @Override
     public void start(Stage primaryStage) {
         GridPane loginRoot = new GridPane();
         VBox ownerMenuRoot = new VBox();
-        GridPane customerMenuRoot = new GridPane();
+        VBox customerMenuRoot = new VBox();
         GridPane customerCostRoot = new GridPane();
         GridPane ownerBooksRoot = new GridPane();
         GridPane ownerCustomersRoot = new GridPane();
@@ -58,7 +59,7 @@ public class Bookstore extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("login button pressed");
-                primaryStage.setScene(ownerMenu);
+                primaryStage.setScene(customerMenu);
             }
         });
         
@@ -82,20 +83,24 @@ public class Bookstore extends Application {
                 primaryStage.setScene(loginScreen);
             }
         });
+        String name = "Ernest";
+        int points = 19;
+        String status = "Bub";
+        Label welcomeMessage = new Label("Welcome " + name + ", you have " + points + " points. Your status is: " + status + ".");
         
-        
-        //Login button
-        Button booksBtn = new Button();
-        booksBtn.setText("Books");
-        Button customerBtn = new Button();
-        customerBtn.setText("Customers");
-        Button logoutBtn = new Button();
-        logoutBtn.setText("Logout");
+        TableView tableView = new TableView();
+
+        TableColumn<User, String> nameColumn = new TableColumn<>("Book Name");
+        nameColumn.setPrefWidth(100);
+        TableColumn<User, String> priceColumn = new TableColumn<>("Book Price");
+        priceColumn.setPrefWidth(100);
+        TableColumn<User, String> selectColumn = new TableColumn<>("Select");
+        tableView.getColumns().addAll(nameColumn, priceColumn, selectColumn);
         
         //placing the elements on screen
-        ownerMenuRoot.getChildren().add(booksBtn);
-        ownerMenuRoot.getChildren().add(customerBtn);
-        ownerMenuRoot.getChildren().add(logoutBtn);
+        customerMenuRoot.getChildren().add(welcomeMessage);
+        customerMenuRoot.getChildren().add(tableView);
+        //customerMenuRoot.getChildren().add(logoutBtn);
         
         primaryStage.setTitle("Windowww");
         primaryStage.setScene(customerMenu);
