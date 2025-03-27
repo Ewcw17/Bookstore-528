@@ -26,7 +26,13 @@ public class Customer extends User{
     }
     
     void redeemBuy(Book book) {
-        if (book.Bookprice - )
+        if (book.getPrice() - points/100 < 0) {
+            points -= book.getPrice() * 100;
+        }
+        
+        else {
+            points = 0;
+        }
         state.manageStatus(points);
         Books.bookList.remove(book);
         //buy multiple

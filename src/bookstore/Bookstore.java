@@ -25,7 +25,7 @@ public class Bookstore extends Application {
         GridPane loginRoot = new GridPane();
         VBox ownerMenuRoot = new VBox();
         VBox customerMenuRoot = new VBox();
-        GridPane customerCostRoot = new GridPane();
+        VBox customerCostRoot = new VBox();
         GridPane ownerBooksRoot = new GridPane();
         GridPane ownerCustomersRoot = new GridPane();
         
@@ -59,7 +59,12 @@ public class Bookstore extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("login button pressed");
-                primaryStage.setScene(customerMenu);
+                System.out.println(usernameTF.getText());
+                if(usernameTF.getText().equals("Owner")){
+                    primaryStage.setScene(ownerMenu);
+                }else if(usernameTF.getText().equals("Customer")){
+                    primaryStage.setScene(customerMenu);
+                }
             }
         });
         
@@ -76,13 +81,23 @@ public class Bookstore extends Application {
         ownerMenuRoot.getChildren().add(customerBtn);
         ownerMenuRoot.getChildren().add(logoutBtn);
         
+        booksBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Books Button Pressed");
+                primaryStage.setScene(ownerBooks);
+            }
+        });
         logoutBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Logout Button Pressed");
+                System.out.println("Logout Button on owner Pressed");
                 primaryStage.setScene(loginScreen);
             }
         });
+        
+        
+        
         String name = "Ernest";
         int points = 19;
         String status = "Bub";
@@ -97,13 +112,99 @@ public class Bookstore extends Application {
         TableColumn<User, String> selectColumn = new TableColumn<>("Select");
         tableView.getColumns().addAll(nameColumn, priceColumn, selectColumn);
         
+        //Login button
+        Button buyBtn = new Button();
+        buyBtn.setText("Buy");
+        Button buyRBtn = new Button();
+        buyRBtn.setText("Redeem Points & Buy");
+        Button logoutCBtn = new Button();
+        logoutCBtn.setText("Logout");
+        buyBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Buy Button Pressed");
+                primaryStage.setScene(customerCost);
+            }
+        });
+        buyRBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Buy and Redeem button Pressed");
+                primaryStage.setScene(customerCost);
+            }
+        });
+        logoutCBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Logout Button on Customer start Pressed");
+                primaryStage.setScene(loginScreen);
+            }
+        });
+        
         //placing the elements on screen
         customerMenuRoot.getChildren().add(welcomeMessage);
         customerMenuRoot.getChildren().add(tableView);
-        //customerMenuRoot.getChildren().add(logoutBtn);
+        //CHEKCBOX STILL MISSINGSDPFIJFSPDOFJSODPFJOFJSPDFOJSODFJ
+        customerMenuRoot.getChildren().add(buyBtn);
+        customerMenuRoot.getChildren().add(buyRBtn);
+        customerMenuRoot.getChildren().add(logoutCBtn);
+        
+        
+        double totalCost = 0;
+        Label costL = new Label("Total Cost: " + totalCost);
+        Label pointsL = new Label("Points: " + points + ", Status: " + status + ".");
+        Button logoutCCBtn = new Button();
+        logoutCCBtn.setText("Logout");
+        logoutCCBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Logout Button on Customer Cost Pressed");
+                primaryStage.setScene(loginScreen);
+            }
+        });
+        
+        customerCostRoot.getChildren().add(costL);
+        customerCostRoot.getChildren().add(pointsL);
+        customerCostRoot.getChildren().add(logoutCCBtn);
+        
+        
+        
+        TableView bookTable = new TableView();
+        bookTable.getColumns().addAll(nameColumn, priceColumn);
+        
+        //labels for the fields
+        Label bookName = new Label("Book Name:");
+        Label bookPrice = new Label("Book Price:");
+        
+        //the text fields
+        TextField bookNameTF = new TextField();
+        TextField bookPriceTF = new TextField();
+        
+        Button addBtn = new Button();
+        addBtn.setText("Add");
+        Button deleteBtn = new Button();
+        deleteBtn.setText("Delete");
+        Button backBtn = new Button();
+        backBtn.setText("Back");
+        
+        ownerBooksRoot.add(bookName, 0, 0);
+        ownerBooksRoot.add(bookNameTF, 1, 0);
+        ownerBooksRoot.add(bookPrice, 0, 1);
+        ownerBooksRoot.add(bookPriceTF, 1, 1);
+        ownerBooksRoot.add(addBtn, 0, 2);
+        ownerBooksRoot.add(deleteBtn, 0, 3);
+        ownerBooksRoot.add(backBtn, 0, 4);
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Back button Pressed");
+                primaryStage.setScene(ownerMenu);
+            }
+        });
+        
         
         primaryStage.setTitle("Windowww");
-        primaryStage.setScene(customerMenu);
+        primaryStage.setScene(ownerBooks);
         primaryStage.show();
         
     }
