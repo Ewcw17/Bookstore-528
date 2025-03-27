@@ -40,17 +40,20 @@ public class Bookstore extends Application {
         Scene ownerBooks = new Scene(ownerBooksRoot, 600, 400);
         Scene ownerCustomers = new Scene(ownerCustomersRoot, 600, 400);
         
-        //labels for the fields
+        
+        //-----------------------LOGIN SCREEN-----------------------------------
+        //Labels for the textfields
         Label username = new Label("Username:");
         Label password = new Label("Password:");
         
-        //the text fields
+        //The textFields
         TextField usernameTF = new TextField("Username:");
         PasswordField passwordTF = new PasswordField();
         
         //Login button
         Button loginBtn = new Button();
         loginBtn.setText("Login");
+        loginBtn.setPrefWidth(100);
         
         //placing the elements on screen
         loginRoot.add(username, 3, 5);
@@ -59,6 +62,7 @@ public class Bookstore extends Application {
         loginRoot.add(passwordTF, 4, 6);
         loginRoot.add(loginBtn, 3, 7);
         
+        //Controls what the login button does
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -71,20 +75,27 @@ public class Bookstore extends Application {
                 }
             }
         });
+        //-----------------------LOGIN SCREEN-----------------------------------
         
-        //Login button
+        
+        //-----------------------Owner Start Screen-----------------------------
+        //Creating buttons for the page
         Button booksBtn = new Button();
         booksBtn.setText("Books");
+        booksBtn.setPrefWidth(100);
         Button customerBtn = new Button();
         customerBtn.setText("Customers");
+        customerBtn.setPrefWidth(100);
         Button logoutBtn = new Button();
         logoutBtn.setText("Logout");
+        logoutBtn.setPrefWidth(100);
         
-        //placing the elements on screen
+        //Placing the buttons on screen
         ownerMenuRoot.getChildren().add(booksBtn);
         ownerMenuRoot.getChildren().add(customerBtn);
         ownerMenuRoot.getChildren().add(logoutBtn);
         
+        //Controlling what the buttons do
         customerBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -92,7 +103,6 @@ public class Bookstore extends Application {
                 primaryStage.setScene(ownerCustomers);
             }
         });
-        
         booksBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -107,16 +117,18 @@ public class Bookstore extends Application {
                 primaryStage.setScene(loginScreen);
             }
         });
+        //-----------------------Owner Start Screen-----------------------------
         
         
-        
+        //--------------------------Customer Start Screen-----------------------
+        //Making variables and creating the welcome text
         String name = "Ernest";
         int points = 19;
         String status = "Bub";
         Label welcomeMessage = new Label("Welcome " + name + ", you have " + points + " points. Your status is: " + status + ".");
         
+        //Making the tables and columns for the table of books
         TableView tableView = new TableView();
-
         TableColumn<User, String> nameColumn = new TableColumn<>("Book Name");
         nameColumn.setPrefWidth(100);
         TableColumn<User, String> priceColumn = new TableColumn<>("Book Price");
@@ -124,13 +136,18 @@ public class Bookstore extends Application {
         TableColumn<User, String> selectColumn = new TableColumn<>("Select");
         tableView.getColumns().addAll(nameColumn, priceColumn, selectColumn);
         
-        //Login button
+        //Making the different buttons
         Button buyBtn = new Button();
         buyBtn.setText("Buy");
+        buyBtn.setPrefWidth(100);
         Button buyRBtn = new Button();
         buyRBtn.setText("Redeem Points & Buy");
+        buyRBtn.setPrefWidth(100);
         Button logoutCBtn = new Button();
         logoutCBtn.setText("Logout");
+        logoutCBtn.setPrefWidth(100);
+        
+        //Logic and control for the buttons
         buyBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -161,12 +178,22 @@ public class Bookstore extends Application {
         customerMenuRoot.getChildren().add(buyRBtn);
         customerMenuRoot.getChildren().add(logoutCBtn);
         
+        //--------------------------Customer Start Screen-----------------------
         
+        
+        //-----------------------Customer Cost Screen---------------------------
+        //Making the variable 
         double totalCost = 0;
+        
+        //labels displaying the cost
         Label costL = new Label("Total Cost: " + totalCost);
         Label pointsL = new Label("Points: " + points + ", Status: " + status + ".");
+        
+        //creating button
         Button logoutCCBtn = new Button();
         logoutCCBtn.setText("Logout");
+        
+        //Logic for button
         logoutCCBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -175,12 +202,15 @@ public class Bookstore extends Application {
             }
         });
         
+        //placing the elements on screen
         customerCostRoot.getChildren().add(costL);
         customerCostRoot.getChildren().add(pointsL);
         customerCostRoot.getChildren().add(logoutCCBtn);
+        //-----------------------Customer Cost Screen---------------------------
         
         
-        
+        //---------------------------Owner Books Screen-------------------------
+        //Creating table
         TableView bookTable = new TableView();
         bookTable.getColumns().addAll(nameColumn, priceColumn);
         
@@ -192,12 +222,20 @@ public class Bookstore extends Application {
         TextField bookNameTF = new TextField();
         TextField bookPriceTF = new TextField();
         
+        //Creating the buttons
         Button addBtn = new Button();
         addBtn.setText("Add");
         Button deleteBtn = new Button();
         deleteBtn.setText("Delete");
         Button backBtn = new Button();
         backBtn.setText("Back");
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Back button Pressed");
+                primaryStage.setScene(ownerMenu);
+            }
+        });
         
         ownerBooksRoot.add(bookTable, 1, 0);
         ownerBooksRoot.add(bookName, 0, 1);
@@ -207,16 +245,10 @@ public class Bookstore extends Application {
         ownerBooksRoot.add(addBtn, 0, 3);
         ownerBooksRoot.add(deleteBtn, 0, 4);
         ownerBooksRoot.add(backBtn, 0, 5);
-        backBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Back button Pressed");
-                primaryStage.setScene(ownerMenu);
-            }
-        });
+        //---------------------------Owner Books Screen-------------------------
         
         
-        
+        //---------------------------Owner Customers Screen---------------------
         TableView customerTable = new TableView();
         TableColumn<User, String> usernameColumn = new TableColumn<>("Username");
         priceColumn.setPrefWidth(100);
@@ -263,9 +295,10 @@ public class Bookstore extends Application {
                 primaryStage.setScene(ownerMenu);
             }
         });
+        //---------------------------Owner Customers Screen---------------------
         
         primaryStage.setTitle("Windowww");
-        primaryStage.setScene(ownerCustomers);
+        primaryStage.setScene(loginScreen);
         primaryStage.show();
         
     }
