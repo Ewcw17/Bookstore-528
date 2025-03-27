@@ -4,20 +4,16 @@
  */
 package bookstore;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author elchoi
  */
-public class Customers {
-    public static ArrayList<Customer> customerlist = new ArrayList<Customer>();
+public class Book {
+    private String bookName;
+    private int bookPrice;
     
-    void buy() {
-        
-    }
-    
-    void redeem() {
-        
+    public Book(String bookName, int bookPrice) {
+        this.bookName = bookName;
+        this.bookPrice = bookPrice;
     }
 }

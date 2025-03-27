@@ -4,13 +4,31 @@
  */
 package bookstore;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author elchoi
  */
 
-public class Customer extends User implements Customers {
-    void Buy(Book book) {
-        
+
+public class Customer extends User{
+    private int points;
+    private Status state;
+    
+    public Customer(String username, String password, int points) {
+        super(username, password);
+        this.points = points;   
+    }
+    
+    void buy(Book book) {
+        Books.bookList.remove(book);
+    }
+    
+    void redeemBuy(Book book) {
+        if (book.Bookprice - )
+        state.manageStatus(points);
+        Books.bookList.remove(book);
+        //buy multiple
     }
 }

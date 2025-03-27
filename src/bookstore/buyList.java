@@ -4,20 +4,10 @@
  */
 package bookstore;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author elchoi
  */
-public class Customers {
-    public static ArrayList<Customer> customerlist = new ArrayList<Customer>();
+class buyList {
     
-    void buy() {
-        
-    }
-    
-    void redeem() {
-        
-    }
 }
