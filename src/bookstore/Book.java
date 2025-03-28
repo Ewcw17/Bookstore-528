@@ -21,7 +21,7 @@ public class Book {
         return bookPrice;
     }
     
-    String bookName() {
+    String getName() {
         return bookName;
     }
     
