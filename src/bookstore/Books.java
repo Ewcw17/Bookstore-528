@@ -14,4 +14,9 @@ import java.util.ArrayList;
 public class Books {
     public static ArrayList<Book> bookList = new ArrayList<Book>();
     
+    void booksDisplay() {
+        for (int i  = 0; bookList.size() < i; i++) {
+            System.out.println(bookList.get(i).getPrice() + "\n" + bookList.get(i).getName());
+        }
+    }
 }

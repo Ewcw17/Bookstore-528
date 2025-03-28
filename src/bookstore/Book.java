@@ -16,4 +16,14 @@ public class Book {
         this.bookName = bookName;
         this.bookPrice = bookPrice;
     }
+    
+    int getPrice() {
+        return bookPrice;
+    }
+    
+    String bookName() {
+        return bookName;
+    }
+    
+    
 }

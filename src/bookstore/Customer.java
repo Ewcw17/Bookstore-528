@@ -22,16 +22,23 @@ public class Customer extends User{
     }
     
     void buy(Book book) {
+        int totalCost = book.getPrice();
+        points += (totalCost * 10);
+        state.manageStatus(points);
         Books.bookList.remove(book);
     }
     
     void redeemBuy(Book book) {
-        if (book.getPrice() - points/100 < 0) {
+        int totalCost;
+        if (book.getPrice() - points/100 <= 0) {
             points -= book.getPrice() * 100;
+            totalCost = 0;
         }
         
         else {
             points = 0;
+            totalCost = book.getPrice() - points/100;
+            
         }
         state.manageStatus(points);
         Books.bookList.remove(book);
