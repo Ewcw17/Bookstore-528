@@ -12,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -35,7 +36,7 @@ public class Bookstore extends Application {
         customerCostRoot.setAlignment(Pos.CENTER);
         VBox ownerBooksRoot = new VBox(10);
         ownerBooksRoot.setAlignment(Pos.CENTER);
-        GridPane ownerCustomersRoot = new GridPane();
+        VBox ownerCustomersRoot = new VBox(10);
         
         Scene loginScreen = new Scene(loginRoot, 600, 400);
         Scene ownerMenu = new Scene(ownerMenuRoot, 600, 400);
@@ -89,7 +90,13 @@ public class Bookstore extends Application {
         loginScreen.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 System.out.println("The 'ENTER' key was pressed");
+                if(usernameTF.getText().equals("Owner")){
+                    primaryStage.setScene(ownerMenu);
+                }else if(usernameTF.getText().equals("Customer")){
+                    primaryStage.setScene(customerMenu);
+                }
             }
+           
         });
         //-----------------------LOGIN SCREEN-----------------------------------
         
@@ -230,37 +237,59 @@ public class Bookstore extends Application {
         
         //---------------------------Owner Books Screen-------------------------
         
+        HBox tableHB = new HBox();
+        
         //Creating table
         TableView bookTable = new TableView();
         bookTable.setPrefWidth(300);
-        bookTable.getColumns().addAll(nameColumn, priceColumn);
         
+        Book books[] = {new Book("The Bible", 0), new Book("The Quran", 100000)};
+        TableColumn<Book, String> nameBooksColumn = new TableColumn<>("Book Name");
+        nameBooksColumn.setCellValueFactory(new PropertyValueFactory<>("bookName"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("bookPrice"));
+        //ObservableList<Book> bookss = FXCollections.observableArrayList()
+        bookTable.getItems().add(new Book("The Bible", 0));
+   
+        
+        bookTable.getColumns().addAll(nameBooksColumn, priceColumn, selectColumn);
+        tableHB.setAlignment(Pos.CENTER);
+        tableHB.getChildren().add(bookTable);
+        ownerBooksRoot.setMargin(tableHB, new Insets(10, 0, 20, 0));
+        
+        //This is a new container to put the text boxes and the add button 
+        //in the same row on screen
+        HBox addingBooksHB = new HBox(10);
         //labels for the fields
         Label bookName = new Label("Book Name:");
         Label bookPrice = new Label("Book Price:");
-        
-        HBox TFHb = new HBox(10);
-        //the text fields
+        addingBooksHB.setMargin(bookPrice, new Insets(0, 0, 0, 20));
+        //Textfields
         TextField bookNameTF = new TextField();
         bookNameTF.setPrefWidth(100);
         bookNameTF.setAlignment(Pos.CENTER);
         TextField bookPriceTF = new TextField();
         bookPriceTF.setPrefWidth(100);
         bookPriceTF.setAlignment(Pos.CENTER);
-        
-        TFHb.getChildren().add(bookName);
-        TFHb.getChildren().add(bookNameTF);
-        TFHb.getChildren().add(bookPrice);
-        TFHb.getChildren().add(bookPriceTF);
-        TFHb.setAlignment(Pos.CENTER);
-        
-        //Creating the buttons
         Button addBtn = new Button();
         addBtn.setText("Add");
+        addBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
+        addingBooksHB.setMargin(addBtn, new Insets(0, 0, 0, 20));
+        
+        addingBooksHB.getChildren().add(bookName);
+        addingBooksHB.getChildren().add(bookNameTF);
+        addingBooksHB.getChildren().add(bookPrice);
+        addingBooksHB.getChildren().add(bookPriceTF);
+        addingBooksHB.getChildren().add(addBtn);
+        addingBooksHB.setAlignment(Pos.CENTER);
+        
+        HBox backDeleteHB = new HBox(40);
+        //Creating the buttons
         Button deleteBtn = new Button();
         deleteBtn.setText("Delete");
+        deleteBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
         Button backBtn = new Button();
         backBtn.setText("Back");
+        backBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -268,16 +297,21 @@ public class Bookstore extends Application {
                 primaryStage.setScene(ownerMenu);
             }
         });
+        backDeleteHB.getChildren().add(deleteBtn);
+        backDeleteHB.getChildren().add(backBtn);
+        backDeleteHB.setAlignment(Pos.CENTER);
+        ownerBooksRoot.setMargin(backDeleteHB, new Insets(10, 0, 20, 0));
         
-        ownerBooksRoot.getChildren().add(bookTable);
-        ownerBooksRoot.getChildren().add(TFHb);
-        ownerBooksRoot.getChildren().add(addBtn);
-        ownerBooksRoot.getChildren().add(deleteBtn);
-        ownerBooksRoot.getChildren().add(backBtn);
+        ownerBooksRoot.getChildren().add(tableHB);
+        ownerBooksRoot.getChildren().add(addingBooksHB);
+        ownerBooksRoot.getChildren().add(backDeleteHB);
         //---------------------------Owner Books Screen-------------------------
         
         
         //---------------------------Owner Customers Screen---------------------
+        
+        HBox tableCHB = new HBox();
+        
         TableView customerTable = new TableView();
         TableColumn<User, String> usernameColumn = new TableColumn<>("Username");
         priceColumn.setPrefWidth(100);
@@ -285,7 +319,13 @@ public class Bookstore extends Application {
         priceColumn.setPrefWidth(100);
         TableColumn<User, String> pointsColumn = new TableColumn<>("Points");
         priceColumn.setPrefWidth(100);
-        customerTable.getColumns().addAll(usernameColumn, passwordColumn, pointsColumn);
+        customerTable.getColumns().addAll(usernameColumn, passwordColumn, pointsColumn, selectColumn);
+        
+        tableCHB.getChildren().add(customerTable);
+        tableCHB.setAlignment(Pos.CENTER);
+        
+        HBox textFieldCHB = new HBox(10);
+        textFieldCHB.setAlignment(Pos.CENTER);
         
         //labels for the fields
         Label customerName = new Label("Username:");
@@ -297,10 +337,25 @@ public class Bookstore extends Application {
         
         Button addCBtn = new Button();
         addCBtn.setText("Add");
+        addCBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
+        
+        textFieldCHB.getChildren().add(customerName);
+        textFieldCHB.getChildren().add(customerNameTF);
+        textFieldCHB.getChildren().add(customerPassword);
+        textFieldCHB.getChildren().add(customerPasswordTF);
+        textFieldCHB.getChildren().add(addCBtn);
+        ownerCustomersRoot.setMargin(textFieldCHB, new Insets(20, 0, 10, 0));
+        
+        HBox backDeleteCHB = new HBox(30);
+        textFieldCHB.setAlignment(Pos.CENTER);
+        
+        
         Button deleteCBtn = new Button();
         deleteCBtn.setText("Delete");
+        deleteCBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
         Button backCBtn = new Button();
         backCBtn.setText("Back");
+        backCBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
         backCBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -309,18 +364,19 @@ public class Bookstore extends Application {
             }
         });
         
-        ownerCustomersRoot.add(customerTable, 1, 0);
-        ownerCustomersRoot.add(customerName, 0, 1);
-        ownerCustomersRoot.add(customerNameTF, 1, 1);
-        ownerCustomersRoot.add(customerPassword, 0, 2);
-        ownerCustomersRoot.add(customerPasswordTF, 1, 2);
-        ownerCustomersRoot.add(addCBtn, 0, 3);
-        ownerCustomersRoot.add(deleteCBtn, 0, 4);
-        ownerCustomersRoot.add(backCBtn, 0, 5);
+        backDeleteCHB.getChildren().add(deleteCBtn);
+        backDeleteCHB.getChildren().add(backCBtn);
+        backDeleteCHB.setAlignment(Pos.CENTER);
+        ownerCustomersRoot.setMargin(backDeleteCHB, new Insets(10, 0, 20, 0));
+        
+        ownerCustomersRoot.getChildren().add(tableCHB);
+        ownerCustomersRoot.getChildren().add(textFieldCHB);
+        ownerCustomersRoot.getChildren().add(backDeleteCHB);
+        ownerCustomersRoot.setAlignment(Pos.CENTER);
         //---------------------------Owner Customers Screen---------------------
         
         primaryStage.setTitle("Windowww");
-        primaryStage.setScene(ownerBooks);
+        primaryStage.setScene(ownerCustomers);
         primaryStage.show();
         
     }
