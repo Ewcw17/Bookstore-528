@@ -29,6 +29,10 @@ public class Customer extends User{
         return state;
     }
     
+    public String getUsername() {
+        return username;
+    }
+    
     void buy(Book book) {
         int totalCost = book.getPrice();
         points += (totalCost * 10);
@@ -53,15 +57,4 @@ public class Customer extends User{
         //buy multiple
     }
     
-    int getPoints() {
-        return points;
-    }
-    
-    String getUsername() {
-        return username;
-    }
-    
-    Status getState() {
-        return state;
-    }
 }

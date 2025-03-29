@@ -8,13 +8,8 @@ package bookstore;
  *
  * @author elchoi
  */
-<<<<<<< HEAD
 public class User {
     protected String username;
-=======
-public abstract class User {
-    private String username;
->>>>>>> 76cdb2e9215bee8d9ed2aebe351091fb98a70402
     private String password;
     
     public User(String username, String password) {
