@@ -4,6 +4,7 @@
  */
 package bookstore;
 
+import java.util.ArrayList;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
@@ -28,9 +29,7 @@ public class Bookstore extends Application {
     
     String title = "Gamer";
     
-//    Customers.customerlist.add(new Customer("Ernest", "404midterm", 15));
-//    Customers.customerlist.add(new Customer("Ethan", "141midterm", 20));
-//    Customers.customerlist.add(new Customer("Leo", "635midterm", 40));
+    ObservableList<Book> placeholderList = FXCollections.observableArrayList(); //**
     
     @Override
         //-----------------------LOGIN SCREEN-----------------------------------
@@ -291,13 +290,16 @@ public class Bookstore extends Application {
         TableColumn<User, String> selectColumn = new TableColumn<>("Select");
         priceColumn.setPrefWidth(100);
         
+        //Hi ernest, im using placeholder arrays for now, but it will eventually
+        //use the bookslist array //** next to a line means it uses the placehodler
+        
         //filling the table's columns using the "getName()" & "getPrice()" 
         //methods from the Book class
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         selectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
-        
-        bookTable.getItems().add(new Book("Book1", 4));
+
+        bookTable.getItems().addAll(placeholderList); //**
         
         //adds the columns to the table, and then the table to the container
         bookTable.getColumns().addAll(nameColumn, priceColumn, selectColumn);
@@ -356,10 +358,23 @@ public class Bookstore extends Application {
         
         //Control for the buttons
         addBtn.setOnAction((ActionEvent event) -> {
-            System.out.println(bookNameTF.getText());
-            ownerStartScreen(primaryStage);
+            try{
+                placeholderList.add(new Book(bookNameTF.getText(), Integer.parseInt(bookPriceTF.getText())));//**
+                
+                ownerBooksScreen(primaryStage);
+            }catch (Exception e){
+                System.out.println("INVALID ARGUMENT");
+            }
         });
+        //Delete button cannot delete multipe at once
         deleteBtn.setOnAction((ActionEvent event) -> {
+            for(int i = 0; i < placeholderList.size(); i++){//**
+                if(placeholderList.get(i).getSelect().isSelected()){
+                    System.out.println(placeholderList.get(i).getName());
+                    placeholderList.remove(i);
+                }
+            }
+            ownerBooksScreen(primaryStage);
             System.out.println("Delete Button Pressed");
         });
         backBtn.setOnAction((ActionEvent event) -> {
