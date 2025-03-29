@@ -44,4 +44,16 @@ public class Customer extends User{
         Books.bookList.remove(book);
         //buy multiple
     }
+    
+    int getPoints() {
+        return points;
+    }
+    
+    String getUsername() {
+        return username;
+    }
+    
+    Status getState() {
+        return state;
+    }
 }
