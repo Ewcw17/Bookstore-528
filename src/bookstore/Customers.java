@@ -4,6 +4,8 @@
  */
 package bookstore;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -11,13 +13,26 @@ import java.util.ArrayList;
  * @author elchoi
  */
 public class Customers {
-    public static ArrayList<Customer> customerlist = new ArrayList<Customer>();
+    public static ArrayList<Customer> customerList = new ArrayList<Customer>();
     
-    void buy() {
-        
+    static void customerWrite() throws IOException {
+        FileWriter customerWrite = new FileWriter("customers.txt");
+        for (int i = 0; i < customerList.size(); i++) {
+            customerWrite.write(customerList.get(i).getUsername() + "," + customerList.get(i).getPoints() + "," + customerList.get(i).getState().getStatus() + "\n");
+        }
+        customerWrite.close();
     }
     
-    void redeem() {
-        
+    void customerDisplay() { 
+    if (customerList == null || customerList.isEmpty()) {
+        System.out.println("No customers to display.");
+        return;
     }
+
+    for (int i  = 0; customerList.size() < i; i++) {
+            System.out.println(customerList.get(i).getUsername() + "," + customerList.get(i).getPoints() + "," + customerList.get(i).getState().getStatus());
+        }
+    }
+    
+    
 }
