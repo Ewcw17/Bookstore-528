@@ -3,17 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/home/student2/elchoi/Desktop/528%20/src/bookstore/Status.java</file>
-            <file>file:/home/student2/elchoi/Desktop/528%20/src/bookstore/Book.java</file>
-            <file>file:/home/student2/elchoi/Desktop/528%20/src/bookstore/Owner.java</file>
-            <file>file:/home/student2/elchoi/Desktop/528%20/src/bookstore/Books.java</file>
-            <file>file:/home/student2/elchoi/Desktop/528%20/src/bookstore/Bookstore.java</file>
-            <file>file:/home/student2/elchoi/Desktop/528%20/src/bookstore/Customer.java</file>
-=======
+            <file>file:/home/student1/e225wong/Desktop/COE528/Bookstore/src/bookstore/Book.java</file>
             <file>file:/home/student1/e225wong/Desktop/COE528/Bookstore/src/bookstore/User.java</file>
+            <file>file:/home/student1/e225wong/Desktop/COE528/Bookstore/src/bookstore/Customers.java</file>
+            <file>file:/home/student1/e225wong/Desktop/COE528/Bookstore/src/bookstore/Books.java</file>
+            <file>file:/home/student1/e225wong/Desktop/COE528/Bookstore/src/bookstore/Owner.java</file>
             <file>file:/home/student1/e225wong/Desktop/COE528/Bookstore/src/bookstore/Bookstore.java</file>
->>>>>>> 6987423f1d2ffc5de63cd9e981a57e45c3c41662
         </group>
     </open-files>
 </project-private>

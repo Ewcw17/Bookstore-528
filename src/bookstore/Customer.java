@@ -21,6 +21,14 @@ public class Customer extends User{
         this.points = points;   
     }
     
+    public int getPoints(){
+        return points;
+    }
+    
+    public Status getState(){
+        return state;
+    }
+    
     void buy(Book book) {
         int totalCost = book.getPrice();
         points += (totalCost * 10);
