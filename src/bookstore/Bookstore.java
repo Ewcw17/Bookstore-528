@@ -6,12 +6,15 @@ package bookstore;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
@@ -24,56 +27,47 @@ import javafx.stage.Stage;
 
 public class Bookstore extends Application {
     
+    String title = "Gamer";
+    
+//    Customers.customerlist.add(new Customer("Ernest", "404midterm", 15));
+//    Customers.customerlist.add(new Customer("Ethan", "141midterm", 20));
+//    Customers.customerlist.add(new Customer("Leo", "635midterm", 40));
+    
     @Override
-    public void start(Stage primaryStage) {
+        //-----------------------LOGIN SCREEN-----------------------------------
+    public void start(Stage primaryStage){
         GridPane loginRoot = new GridPane();
         loginRoot.setAlignment(Pos.CENTER);
-        VBox ownerMenuRoot = new VBox(20);
-        ownerMenuRoot.setAlignment(Pos.CENTER);
-        VBox customerMenuRoot = new VBox(5);
-        customerMenuRoot.setAlignment(Pos.CENTER);
-        VBox customerCostRoot = new VBox(5);
-        customerCostRoot.setAlignment(Pos.CENTER);
-        VBox ownerBooksRoot = new VBox(10);
-        ownerBooksRoot.setAlignment(Pos.CENTER);
-        VBox ownerCustomersRoot = new VBox(10);
-        
         Scene loginScreen = new Scene(loginRoot, 600, 400);
-        Scene ownerMenu = new Scene(ownerMenuRoot, 600, 400);
-        Scene customerMenu = new Scene(customerMenuRoot, 600, 400);
-        Scene customerCost = new Scene(customerCostRoot, 600, 400);
-        Scene ownerBooks = new Scene(ownerBooksRoot, 600, 400);
-        Scene ownerCustomers = new Scene(ownerCustomersRoot, 600, 400);
         
-        
-        //-----------------------LOGIN SCREEN-----------------------------------
         //Labels for the textfields
         Label username = new Label("Username:");
         Label password = new Label("Password:");
-        
+
         //The textFields
         TextField usernameTF = new TextField();
         usernameTF.setPromptText("Username");
         PasswordField passwordTF = new PasswordField();
         passwordTF.setPromptText("Password");
-        
+
         //Login button
         Button loginBtn = new Button();
         loginBtn.setText("Login");
         loginBtn.setPrefWidth(100);
-        loginBtn.setStyle("-fx-background-color: #C8A2C8");
+        loginBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
+        
         
         loginRoot.setMargin(usernameTF, new Insets(15, 15, 15, 15));
         loginRoot.setMargin(passwordTF, new Insets(15, 15, 15, 15));
         loginRoot.setMargin(loginBtn, new Insets(15, 15, 15, 15));
-        
+
         //placing the elements on screen
         loginRoot.add(username, 3, 5);
         loginRoot.add(usernameTF, 4, 5);
         loginRoot.add(password, 3, 6);
         loginRoot.add(passwordTF, 4, 6);
         loginRoot.add(loginBtn, 4, 7);
-        
+
         //Controls what the login button does
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -81,9 +75,9 @@ public class Bookstore extends Application {
                 System.out.println("login button pressed");
                 System.out.println(usernameTF.getText());
                 if(usernameTF.getText().equals("Owner")){
-                    primaryStage.setScene(ownerMenu);
+                    ownerStartScreen(primaryStage);
                 }else if(usernameTF.getText().equals("Customer")){
-                    primaryStage.setScene(customerMenu);
+                    customerStartScreen(primaryStage);
                 }
             }
         });
@@ -91,17 +85,29 @@ public class Bookstore extends Application {
             if (e.getCode() == KeyCode.ENTER) {
                 System.out.println("The 'ENTER' key was pressed");
                 if(usernameTF.getText().equals("Owner")){
-                    primaryStage.setScene(ownerMenu);
+                    ownerStartScreen(primaryStage);
                 }else if(usernameTF.getText().equals("Customer")){
-                    primaryStage.setScene(customerMenu);
+                    customerStartScreen(primaryStage);
                 }
             }
-           
+
         });
+        
+        primaryStage.setTitle(title);
+        primaryStage.setScene(loginScreen);
+        primaryStage.show();
+        
+    }
         //-----------------------LOGIN SCREEN-----------------------------------
         
         
         //-----------------------Owner Start Screen-----------------------------
+    public void ownerStartScreen(Stage primaryStage){
+        
+        VBox ownerMenuRoot = new VBox(20);
+        ownerMenuRoot.setAlignment(Pos.CENTER);
+        Scene ownerMenu = new Scene(ownerMenuRoot, 600, 400);
+        
         //Creating buttons for the page
         Button booksBtn = new Button();
         booksBtn.setText("Books");
@@ -115,6 +121,7 @@ public class Bookstore extends Application {
         logoutBtn.setText("Logout");
         logoutBtn.setPrefWidth(200);
         logoutBtn.setPrefHeight(50);
+        logoutBtn.setStyle("-fx-background-color: #EA3B52; -fx-background-radius: 100;");
         
         //Placing the buttons on screen
         ownerMenuRoot.getChildren().add(booksBtn);
@@ -126,41 +133,70 @@ public class Bookstore extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Customers button Pressed");
-                primaryStage.setScene(ownerCustomers);
+                ownerCustomersScreen(primaryStage);
             }
         });
         booksBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Books Button Pressed");
-                primaryStage.setScene(ownerBooks);
+                ownerBooksScreen(primaryStage);
             }
         });
         logoutBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Logout Button on owner Pressed");
-                primaryStage.setScene(loginScreen);
+                start(primaryStage);
             }
         });
+        
+        primaryStage.setTitle(title);
+        primaryStage.setScene(ownerMenu);
+        primaryStage.show();
+        
+    }
         //-----------------------Owner Start Screen-----------------------------
         
         
-        //--------------------------Customer Start Screen-----------------------
+        //-----------------------Customer Start Screen--------------------------
+    public void customerStartScreen(Stage primaryStage){
+        VBox customerMenuRoot = new VBox(5);
+        customerMenuRoot.setAlignment(Pos.CENTER);
+        Scene customerMenu = new Scene(customerMenuRoot, 600, 400);
         //Making variables and creating the welcome text
         String name = "Ernest";
         int points = 19;
         String status = "Bub";
         Label welcomeMessage = new Label("Welcome " + name + ", you have " + points + " points. Your status is: " + status + ".");
+        customerMenuRoot.setMargin(welcomeMessage, new Insets(25, 15, 15, 15));
+        
+        HBox customerStartScreenHB = new HBox();
         
         //Making the tables and columns for the table of books
-        TableView tableView = new TableView();
-        TableColumn<User, String> nameColumn = new TableColumn<>("Book Name");
-        nameColumn.setPrefWidth(100);
-        TableColumn<User, String> priceColumn = new TableColumn<>("Book Price");
-        priceColumn.setPrefWidth(100);
+        TableView customerBooksTable = new TableView();
+        TableColumn<User, String> nameCustColumn = new TableColumn<>("Book Name");
+        nameCustColumn.setPrefWidth(100);
+        TableColumn<User, String> priceCustColumn = new TableColumn<>("Book Price");
+        priceCustColumn.setPrefWidth(100);
         TableColumn<User, String> selectColumn = new TableColumn<>("Select");
-        tableView.getColumns().addAll(nameColumn, priceColumn, selectColumn);
+        
+        ObservableList<Book> books2 = FXCollections.observableArrayList();
+        books2.add(new Book("The Bible", 0));
+        books2.add(new Book("The Quran", 10000));
+  
+        //selectColumn.setCellFactory(column -> new CheckBoxTableCell<>());
+        for(Book book : books2)
+            customerBooksTable.getItems().add(book);
+        
+        nameCustColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        priceCustColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        customerBooksTable.getColumns().addAll(nameCustColumn, priceCustColumn, selectColumn);
+        
+        customerStartScreenHB.getChildren().add(customerBooksTable);
+        customerStartScreenHB.setAlignment(Pos.CENTER);
+        
+        HBox buyRedeemHB = new HBox(5);
         
         //Making the different buttons
         Button buyBtn = new Button();
@@ -168,49 +204,64 @@ public class Bookstore extends Application {
         buyBtn.setPrefWidth(100);
         Button buyRBtn = new Button();
         buyRBtn.setText("Redeem Points & Buy");
-        buyRBtn.setPrefWidth(100);
+        buyRBtn.setPrefWidth(170);
+        buyRedeemHB.getChildren().addAll(buyBtn, buyRBtn);
+        buyRedeemHB.setAlignment(Pos.CENTER);
+        customerMenuRoot.setMargin(customerStartScreenHB, new Insets(15, 15, 15, 15));
+        
         Button logoutCBtn = new Button();
         logoutCBtn.setText("Logout");
         logoutCBtn.setPrefWidth(100);
+        logoutCBtn.setStyle("-fx-background-color: #EA3B52; -fx-background-radius: 100;");
+        customerMenuRoot.setMargin(logoutCBtn, new Insets(15, 15, 15, 15));
         
         //Logic and control for the buttons
         buyBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Buy Button Pressed");
-                primaryStage.setScene(customerCost);
+                customerCostScreen(primaryStage);
             }
         });
         buyRBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Buy and Redeem button Pressed");
-                primaryStage.setScene(customerCost);
+                customerCostScreen(primaryStage);
             }
         });
         logoutCBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Logout Button on Customer start Pressed");
-                primaryStage.setScene(loginScreen);
+                start(primaryStage);
             }
         });
         
         //placing the elements on screen
         customerMenuRoot.getChildren().add(welcomeMessage);
-        customerMenuRoot.getChildren().add(tableView);
+        customerMenuRoot.getChildren().add(customerStartScreenHB);
         //CHEKCBOX STILL MISSINGSDPFIJFSPDOFJSODPFJOFJSPDFOJSODFJ
-        customerMenuRoot.getChildren().add(buyBtn);
-        customerMenuRoot.getChildren().add(buyRBtn);
+        customerMenuRoot.getChildren().add(buyRedeemHB);
         customerMenuRoot.getChildren().add(logoutCBtn);
         
-        //--------------------------Customer Start Screen-----------------------
+        primaryStage.setTitle(title);
+        primaryStage.setScene(customerMenu);
+        primaryStage.show();
+        
+    }
+        //-----------------------Customer Start Screen--------------------------
         
         
         //-----------------------Customer Cost Screen---------------------------
+    public void customerCostScreen(Stage primaryStage){
+        VBox customerCostRoot = new VBox(5);
+        customerCostRoot.setAlignment(Pos.CENTER);
+        Scene customerCost = new Scene(customerCostRoot, 600, 400);
         //Making the variable 
         double totalCost = 0;
-        
+        int points = 19;
+        String status = "bub";
         //labels displaying the cost
         Label costL = new Label("Total Cost: " + totalCost);
         Label pointsL = new Label("Points: " + points + ", Status: " + status + ".");
@@ -218,13 +269,14 @@ public class Bookstore extends Application {
         //creating button
         Button logoutCCBtn = new Button();
         logoutCCBtn.setText("Logout");
+        logoutCCBtn.setStyle("-fx-background-color: #EA3B52; -fx-background-radius: 100;");
         
         //Logic for button
         logoutCCBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Logout Button on Customer Cost Pressed");
-                primaryStage.setScene(loginScreen);
+                start(primaryStage);
             }
         });
         
@@ -232,10 +284,21 @@ public class Bookstore extends Application {
         customerCostRoot.getChildren().add(costL);
         customerCostRoot.getChildren().add(pointsL);
         customerCostRoot.getChildren().add(logoutCCBtn);
+        
+        primaryStage.setTitle(title);
+        primaryStage.setScene(customerCost);
+        primaryStage.show();
+        
+    }
         //-----------------------Customer Cost Screen---------------------------
         
         
-        //---------------------------Owner Books Screen-------------------------
+        //-----------------------Owner Books Screen-----------------------------
+    public void ownerBooksScreen(Stage primaryStage){
+        
+        VBox ownerBooksRoot = new VBox(10);
+        ownerBooksRoot.setAlignment(Pos.CENTER);
+        Scene ownerBooks = new Scene(ownerBooksRoot, 600, 400);
         
         HBox tableHB = new HBox();
         
@@ -243,15 +306,15 @@ public class Bookstore extends Application {
         TableView bookTable = new TableView();
         bookTable.setPrefWidth(300);
         
-        Book books[] = {new Book("The Bible", 0), new Book("The Quran", 100000)};
-        TableColumn<Book, String> nameBooksColumn = new TableColumn<>("Book Name");
-        nameBooksColumn.setCellValueFactory(new PropertyValueFactory<>("bookName"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("bookPrice"));
-        //ObservableList<Book> bookss = FXCollections.observableArrayList()
-        bookTable.getItems().add(new Book("The Bible", 0));
-   
+        TableColumn<User, String> nameColumn = new TableColumn<>("Book Name");
+        nameColumn.setPrefWidth(100);
+        TableColumn<User, String> priceColumn = new TableColumn<>("Book Name");
+        priceColumn.setPrefWidth(100);
         
-        bookTable.getColumns().addAll(nameBooksColumn, priceColumn, selectColumn);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        
+        bookTable.getColumns().addAll(nameColumn, priceColumn);
         tableHB.setAlignment(Pos.CENTER);
         tableHB.getChildren().add(bookTable);
         ownerBooksRoot.setMargin(tableHB, new Insets(10, 0, 20, 0));
@@ -294,7 +357,7 @@ public class Bookstore extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println(bookNameTF.getText());
-                primaryStage.setScene(ownerMenu);
+                ownerStartScreen(primaryStage);
             }
         });
         backDeleteHB.getChildren().add(deleteBtn);
@@ -305,21 +368,35 @@ public class Bookstore extends Application {
         ownerBooksRoot.getChildren().add(tableHB);
         ownerBooksRoot.getChildren().add(addingBooksHB);
         ownerBooksRoot.getChildren().add(backDeleteHB);
-        //---------------------------Owner Books Screen-------------------------
+        
+        primaryStage.setTitle(title);
+        primaryStage.setScene(ownerBooks);
+        primaryStage.show();
+        
+    }
+        //-----------------------Owner Books Screen-----------------------------
         
         
-        //---------------------------Owner Customers Screen---------------------
+        //-----------------------Owner Customers Screen-------------------------
+    public void ownerCustomersScreen(Stage primaryStage){
+        
+        VBox ownerCustomersRoot = new VBox(10);
+        Scene ownerCustomers = new Scene(ownerCustomersRoot, 600, 400);
         
         HBox tableCHB = new HBox();
         
         TableView customerTable = new TableView();
-        TableColumn<User, String> usernameColumn = new TableColumn<>("Username");
-        priceColumn.setPrefWidth(100);
-        TableColumn<User, String> passwordColumn = new TableColumn<>("Password");
-        priceColumn.setPrefWidth(100);
-        TableColumn<User, String> pointsColumn = new TableColumn<>("Points");
-        priceColumn.setPrefWidth(100);
-        customerTable.getColumns().addAll(usernameColumn, passwordColumn, pointsColumn, selectColumn);
+        TableColumn<Customer, String> usernameColumn = new TableColumn<>("Username");
+        usernameColumn.setPrefWidth(100);
+        TableColumn<Customer, String> passwordColumn = new TableColumn<>("Password");
+        passwordColumn.setPrefWidth(100);
+        TableColumn<Customer, String> pointsColumn = new TableColumn<>("Points");
+        pointsColumn.setPrefWidth(100);
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+        pointsColumn.setCellValueFactory(new PropertyValueFactory<>("points"));
+        //needs a setItems
+        customerTable.getColumns().addAll(usernameColumn, passwordColumn, pointsColumn);
         
         tableCHB.getChildren().add(customerTable);
         tableCHB.setAlignment(Pos.CENTER);
@@ -360,7 +437,7 @@ public class Bookstore extends Application {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("Back button Pressed");
-                primaryStage.setScene(ownerMenu);
+                ownerStartScreen(primaryStage);
             }
         });
         
@@ -373,13 +450,13 @@ public class Bookstore extends Application {
         ownerCustomersRoot.getChildren().add(textFieldCHB);
         ownerCustomersRoot.getChildren().add(backDeleteCHB);
         ownerCustomersRoot.setAlignment(Pos.CENTER);
-        //---------------------------Owner Customers Screen---------------------
         
-        primaryStage.setTitle("Windowww");
+        primaryStage.setTitle(title);
         primaryStage.setScene(ownerCustomers);
         primaryStage.show();
         
     }
+        //-----------------------Owner Customers Screen-------------------------
 
     /**
      * @param args the command line arguments

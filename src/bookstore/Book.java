@@ -4,6 +4,7 @@
  */
 package bookstore;
 
+import javafx.scene.control.CheckBox;
 /**
  *
  * @author elchoi
@@ -11,19 +12,23 @@ package bookstore;
 public class Book {
     private String bookName;
     private int bookPrice;
+    private CheckBox select;
     
     public Book(String bookName, int bookPrice) {
         this.bookName = bookName;
         this.bookPrice = bookPrice;
+        this.select = new CheckBox();
     }
     
-    int getPrice() {
+    public int getPrice() {
         return bookPrice;
     }
     
-    String getName() {
+    public String getName() {
         return bookName;
     }
     
-    
+    public CheckBox getSelect(){
+        return select;
+    }
 }

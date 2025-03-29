@@ -1,0 +1,8 @@
+"The Bible", 2
+"The Quran", 10000
+"Dynamics Textbook", 10
+"Harry Potter and the Prisoner of Azkaban", 20
+"Quotations by Chairman Mao", 50
+"Lolita", 30
+"Diary of a Wimpy Kid", 10
+"Frankenstein", 30
