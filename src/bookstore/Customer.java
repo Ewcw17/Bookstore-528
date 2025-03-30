@@ -4,6 +4,7 @@
  */
 package bookstore;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -33,14 +34,15 @@ public class Customer extends User{
         return username;
     }
     
-    void buy(Book book) {
+    void buy(Book book) throws IOException {
         int totalCost = book.getPrice();
         points += (totalCost * 10);
         state.manageStatus(points);
         Books.bookList.remove(book);
+        Books.bookWrite();
     }
     
-    void redeemBuy(Book book) {
+    void redeemBuy(Book book) throws IOException {
         int totalCost;
         if (book.getPrice() - points/100 <= 0) {
             points -= book.getPrice() * 100;
@@ -54,6 +56,7 @@ public class Customer extends User{
         }
         state.manageStatus(points);
         Books.bookList.remove(book);
+        Books.bookWrite();
         //buy multiple
     }
     
