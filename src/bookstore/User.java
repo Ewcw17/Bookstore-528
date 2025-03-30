@@ -10,7 +10,7 @@ package bookstore;
  */
 public class User {
     protected String username;
-    private String password;
+    protected String password;
     
     public User(String username, String password) {
         this.username = username;

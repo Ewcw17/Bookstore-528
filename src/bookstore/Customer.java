@@ -5,6 +5,7 @@
 package bookstore;
 
 import java.util.ArrayList;
+import javafx.scene.control.CheckBox;
 
 /**
  *
@@ -15,10 +16,12 @@ import java.util.ArrayList;
 public class Customer extends User{
     private int points;
     private Status state;
+    private CheckBox select;
     
     public Customer(String username, String password, int points) {
         super(username, password);
         this.points = points;   
+        this.select = new CheckBox();
     }
     
     public int getPoints(){
@@ -31,6 +34,13 @@ public class Customer extends User{
     
     public String getUsername() {
         return username;
+    }
+    public String getPassword() {
+        return password;
+    }
+    
+    public CheckBox getSelect(){
+        return select;
     }
     
     void buy(Book book) {
