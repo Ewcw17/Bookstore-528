@@ -106,7 +106,6 @@ public class Bookstore extends Application {
         
         primaryStage.setTitle(title);
         primaryStage.setScene(loginScreen);
-        ownerCustomersScreen(primaryStage);
         primaryStage.show();
         
     }

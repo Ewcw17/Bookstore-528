@@ -10,14 +10,14 @@ package bookstore;
  */
 public class Status{
     String status;
-    void Status(String status) {
+    public void Status(String status) {
         if (status.equals("gold") && status.equals("silver") == false) {
      // return an error message or some shit like that
         }
         this.status = status;     
     }
     
-    void manageStatus(int points) {
+    public void manageStatus(int points) {
         if (points >= 1000) {
             this.status = "gold";
         }
@@ -27,7 +27,7 @@ public class Status{
         }
     }
     
-    String getStatus() {
+    public String getStatus() {
         return this.status;
     }
 }

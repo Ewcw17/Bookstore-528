@@ -21,8 +21,9 @@ public class Customer extends User{
     
     public Customer(String username, String password, int points) {
         super(username, password);
-        this.points = points;   
+        this.points = points;
         this.select = new CheckBox();
+        this.state = new Status();
         this.state.manageStatus(this.points);
     }
     
