@@ -23,6 +23,7 @@ public class Customer extends User{
         super(username, password);
         this.points = points;   
         this.select = new CheckBox();
+        this.state.manageStatus(this.points);
     }
     
     public int getPoints(){
@@ -36,6 +37,7 @@ public class Customer extends User{
     public String getUsername() {
         return username;
     }
+    
     public String getPassword() {
         return password;
     }
@@ -49,7 +51,7 @@ public class Customer extends User{
         points += (totalCost * 10);
         state.manageStatus(points);
         Books.bookList.remove(book);
-        Books.bookWrite();
+        //Books.bookWrite();
     }
     
     void redeemBuy(Book book) throws IOException {
@@ -66,7 +68,7 @@ public class Customer extends User{
         }
         state.manageStatus(points);
         Books.bookList.remove(book);
-        Books.bookWrite();
+        //Books.bookWrite();
         //buy multiple
     }
     

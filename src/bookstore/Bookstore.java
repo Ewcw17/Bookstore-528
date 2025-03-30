@@ -34,14 +34,6 @@ public class Bookstore extends Application {
     
     String title = "Gamer";
     
-    //Hi ernest, im using placeholder arrays for now, but it will eventually
-    //use the bookslist/customerlist arrays. //** next to a line means it uses the placehodler
-    
-    ObservableList<Book> placeholderList = FXCollections.observableArrayList(); //** For books
-    ObservableList<Book> placeholderList2 = FXCollections.observableArrayList(); //** for the delete books function
-    ObservableList<Customer> placeholderCustomerList = FXCollections.observableArrayList();//**
-
-    
     @Override
         //-----------------------LOGIN SCREEN-----------------------------------
     public void start(Stage primaryStage){
@@ -84,19 +76,29 @@ public class Bookstore extends Application {
         loginBtn.setOnAction((ActionEvent event) -> {
             System.out.println("login button pressed");
             System.out.println(usernameTF.getText());
-            if(usernameTF.getText().equals("Owner")){
+            if(usernameTF.getText().equals("admin")){
                 ownerStartScreen(primaryStage);
-            }else if(usernameTF.getText().equals("Customer")){
-                customerStartScreen(primaryStage);
+            }else{
+                for(Customer c : Customers.customerList){
+                    if(c.getUsername().equals(usernameTF.getText()) && c.getPassword().equals(passwordTF.getText())){
+                        customerStartScreen(primaryStage, c);
+                        break;
+                    }
+                }
             }
         });
         loginScreen.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 System.out.println("The 'ENTER' key was pressed");
-                if(usernameTF.getText().equals("Owner")){
+                if(usernameTF.getText().equals("admin")){
                     ownerStartScreen(primaryStage);
-                }else if(usernameTF.getText().equals("Customer")){
-                    customerStartScreen(primaryStage);
+                }else{
+                    for(Customer c : Customers.customerList){
+                        if(c.getUsername().equals(usernameTF.getText()) && c.getPassword().equals(passwordTF.getText())){
+                            customerStartScreen(primaryStage, c);
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -161,15 +163,12 @@ public class Bookstore extends Application {
         
         
         //-----------------------Customer Start Screen--------------------------
-    public void customerStartScreen(Stage primaryStage){
+    public void customerStartScreen(Stage primaryStage, Customer customer){
         VBox customerMenuRoot = new VBox(5);
         customerMenuRoot.setAlignment(Pos.CENTER);
         Scene customerMenu = new Scene(customerMenuRoot, 600, 400);
-        //Making variables and creating the welcome text
-        String name = "Ernest";
-        int points = 19;
-        String status = "Bub";
-        Label welcomeMessage = new Label("Welcome " + name + ", you have " + points + " points. Your status is: " + status + ".");
+        //creating the welcome text
+        Label welcomeMessage = new Label("Welcome " + customer.getUsername() + ", you have " + customer.getPoints() + " points. Your status is: " + customer.getState().getStatus() + ".");
         VBox.setMargin(welcomeMessage, new Insets(25, 15, 15, 15));
         
         HBox customerStartScreenHB = new HBox();
@@ -310,7 +309,7 @@ public class Bookstore extends Application {
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         selectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
 
-        bookTable.getItems().addAll(placeholderList); //**
+        bookTable.getItems().addAll(Books.bookList); //**
         
         //adds the columns to the table, and then the table to the container
         bookTable.getColumns().addAll(nameColumn, priceColumn, selectColumn);
@@ -370,7 +369,7 @@ public class Bookstore extends Application {
         //Control for the buttons
         addBtn.setOnAction((ActionEvent event) -> {
             try{
-                placeholderList.add(new Book(bookNameTF.getText(), Integer.parseInt(bookPriceTF.getText())));//**
+                Books.bookList.add(new Book(bookNameTF.getText(), Integer.parseInt(bookPriceTF.getText())));//**
                 
                 ownerBooksScreen(primaryStage);
             }catch (Exception e){
@@ -380,18 +379,20 @@ public class Bookstore extends Application {
         
         //Delete function is uncessarily complicated and wasteful, I'll redo it if i have time
         deleteBtn.setOnAction((ActionEvent event) -> {
-            for(int i = 0; i < placeholderList.size(); i++){//**
-                if(!placeholderList.get(i).getSelect().isSelected()){
-                    placeholderList2.add(placeholderList.get(i));
-                    System.out.println(placeholderList.get(i).getName());
-                    //placeholderList.remove(i);
+            
+            ObservableList<Book> placeholderList = FXCollections.observableArrayList();
+            
+            for(int i = 0; i < Books.bookList.size(); i++){//**
+                if(!Books.bookList.get(i).getSelect().isSelected()){
+                    placeholderList.add(Books.bookList.get(i));
+                    System.out.println(Books.bookList.get(i).getName());
                 }
             }
-            placeholderList.clear();
-            for(int i = 0; i < placeholderList2.size(); i++){
-                placeholderList.add(placeholderList2.get(i));
+            Books.bookList.clear();
+            for(int i = 0; i < placeholderList.size(); i++){
+                Books.bookList.add(placeholderList.get(i));
             }
-            placeholderList2.clear();
+            placeholderList.clear();
             ownerBooksScreen(primaryStage);
             System.out.println("Delete Button Pressed");
         });
@@ -436,7 +437,7 @@ public class Bookstore extends Application {
         selectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
         
         //Adds the actual instances of custoemrs to the table
-        customerTable.getItems().addAll(placeholderCustomerList);
+        customerTable.getItems().addAll(Customers.customerList);
         
         //adds the columns to the table
         customerTable.getColumns().addAll(usernameColumn, passwordColumn, pointsColumn, selectColumn);
@@ -499,7 +500,7 @@ public class Bookstore extends Application {
         addCBtn.setOnAction((ActionEvent event) -> {
             System.out.println("Add button Pressed");
             try{
-                placeholderCustomerList.add(new Customer(customerNameTF.getText(), customerPasswordTF.getText(), 0));
+                Customers.customerList.add(new Customer(customerNameTF.getText(), customerPasswordTF.getText(), 0));
                 ownerCustomersScreen(primaryStage);
             }catch (Exception e){
                 System.out.println("INVALID ARGUMENT");
@@ -509,15 +510,15 @@ public class Bookstore extends Application {
             
             ObservableList<Customer> placeholderCustomerList2 = FXCollections.observableArrayList();
             
-            for(int i = 0; i < placeholderCustomerList.size(); i++){//**
-                if(!placeholderCustomerList.get(i).getSelect().isSelected()){
-                    placeholderCustomerList2.add(placeholderCustomerList.get(i));
-                    System.out.println(placeholderCustomerList.get(i).getUsername());
+            for(int i = 0; i < Customers.customerList.size(); i++){//**
+                if(!Customers.customerList.get(i).getSelect().isSelected()){
+                    placeholderCustomerList2.add(Customers.customerList.get(i));
+                    System.out.println(Customers.customerList.get(i).getUsername());
                 }
             }
-            placeholderCustomerList.clear();
+            Customers.customerList.clear();
             for(int i = 0; i < placeholderCustomerList2.size(); i++){
-                placeholderCustomerList.add(placeholderCustomerList2.get(i));
+                Customers.customerList.add(placeholderCustomerList2.get(i));
             }
             placeholderCustomerList2.clear();
             ownerCustomersScreen(primaryStage);
@@ -579,6 +580,13 @@ public class Bookstore extends Application {
         } catch (IOException e) {
             System.err.println("Error reading the file: " + e.getMessage());
         }
+        
+//        System.out.println(Books.bookList.size());
+//        
+//        for(int i = 0; i < Books.bookList.size(); i++){
+//            System.out.println(Books.bookList.get(i).getName());
+//        }
+        
         launch(args);
     }
     
