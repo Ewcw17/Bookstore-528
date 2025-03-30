@@ -4,6 +4,11 @@
  */
 package bookstore;
 
+import java.io.BufferedReader;
+import bookstore.Book;
+import bookstore.Customer;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -536,6 +541,44 @@ public class Bookstore extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        String fileName = "Books.txt"; 
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    String title = parts[0].trim();
+                    int price = Integer.parseInt(parts[1].trim());  
+                    Book newBook = new Book(title, price);
+                    Books.bookList.add(newBook);
+                } else {
+                    System.err.println("Invalid line format: " + line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+        
+        fileName = "Customers.txt"; 
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    String username = parts[0].trim();
+                    String password = parts[1].trim();
+                    int points = Integer.parseInt(parts[2].trim());  
+                    Customer newCustomer = new Customer(username, password, points);
+                    Customers.customerList.add(newCustomer);
+                } else {
+                    System.err.println("Invalid line format: " + line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
         launch(args);
     }
     
