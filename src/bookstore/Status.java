@@ -11,19 +11,19 @@ package bookstore;
 public class Status{
     String status;
     public void Status(String status) {
-        if (status.equals("gold") && status.equals("silver") == false) {
-     // return an error message or some shit like that
+        if (status.equals("Gold") && status.equals("Silver") == false) {
+     // return an error message or something like that
         }
         this.status = status;     
     }
     
     public void manageStatus(int points) {
         if (points >= 1000) {
-            this.status = "gold";
+            this.status = "Gold";
         }
         
         if (points < 1000) {
-            this.status = "silver";
+            this.status = "Silver";
         }
     }
     

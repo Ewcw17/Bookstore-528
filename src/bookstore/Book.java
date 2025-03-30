@@ -31,4 +31,8 @@ public class Book {
     public CheckBox getSelect(){
         return select;
     }
+    
+    public void resetCheck(){
+        select.setSelected(false);
+    }
 }

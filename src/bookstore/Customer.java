@@ -47,6 +47,10 @@ public class Customer extends User{
         return select;
     }
     
+    public void resetCheck(){
+        select.setSelected(false);
+    }
+    
     void buy(Book book) throws IOException {
         int totalCost = book.getPrice();
         points += (totalCost * 10);

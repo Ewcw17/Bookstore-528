@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 
 public class Bookstore extends Application {
     
-    String title = "Gamer";
+    String title = "Bookstore App";
     
     @Override
         //-----------------------LOGIN SCREEN-----------------------------------
@@ -42,6 +42,7 @@ public class Bookstore extends Application {
         Scene loginScreen = new Scene(loginRoot, 600, 400);
         
         Label introMessage = new Label("Welcome to the Chinese Bookstore");
+        Label invalidMessage = new Label("Unrecognised login");
         
         //Labels for the textfields
         Label username = new Label("Username:");
@@ -76,7 +77,7 @@ public class Bookstore extends Application {
         loginBtn.setOnAction((ActionEvent event) -> {
             System.out.println("login button pressed");
             System.out.println(usernameTF.getText());
-            if(usernameTF.getText().equals("admin")){
+            if(usernameTF.getText().equals("admin") && passwordTF.getText().equals("admin")){
                 ownerStartScreen(primaryStage);
             }else{
                 for(Customer c : Customers.customerList){
@@ -85,6 +86,7 @@ public class Bookstore extends Application {
                         break;
                     }
                 }
+                //Need to show that invalid login was processed
             }
         });
         loginScreen.setOnKeyPressed(e -> {
@@ -124,10 +126,12 @@ public class Bookstore extends Application {
         booksBtn.setText("Books");
         booksBtn.setPrefWidth(200);
         booksBtn.setPrefHeight(50);
+        booksBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
         Button customerBtn = new Button();
         customerBtn.setText("Customers");
         customerBtn.setPrefWidth(200);
         customerBtn.setPrefHeight(50);
+        customerBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
         Button logoutBtn = new Button();
         logoutBtn.setText("Logout");
         logoutBtn.setPrefWidth(200);
@@ -163,51 +167,61 @@ public class Bookstore extends Application {
         
         //-----------------------Customer Start Screen--------------------------
     public void customerStartScreen(Stage primaryStage, Customer customer){
+        //Setting up the screens to display the information on
         VBox customerMenuRoot = new VBox(5);
         customerMenuRoot.setAlignment(Pos.CENTER);
         Scene customerMenu = new Scene(customerMenuRoot, 600, 400);
+        
         //creating the welcome text
         Label welcomeMessage = new Label("Welcome " + customer.getUsername() + ", you have " + customer.getPoints() + " points. Your status is: " + customer.getState().getStatus() + ".");
         VBox.setMargin(welcomeMessage, new Insets(25, 15, 15, 15));
         
+        //creating a container to hold the table within
         HBox customerStartScreenHB = new HBox();
         
         //Making the tables and columns for the table of books
         TableView customerBooksTable = new TableView();
+        customerBooksTable.setPrefWidth(520);
         TableColumn<User, String> nameCustColumn = new TableColumn<>("Book Name");
-        nameCustColumn.setPrefWidth(100);
+        nameCustColumn.setPrefWidth(customerBooksTable.getPrefWidth()*0.6);
         TableColumn<User, String> priceCustColumn = new TableColumn<>("Book Price");
-        priceCustColumn.setPrefWidth(100);
+        priceCustColumn.setPrefWidth(customerBooksTable.getPrefWidth()*0.2);
         TableColumn<User, String> selectColumn = new TableColumn<>("Select");
+        selectColumn.setPrefWidth(customerBooksTable.getPrefWidth()*0.2);
         
-        ObservableList<Book> books2 = FXCollections.observableArrayList();
-        books2.add(new Book("The Bible", 0));
-        books2.add(new Book("The Quran", 10000));
-  
-        //selectColumn.setCellFactory(column -> new CheckBoxTableCell<>());
-        for(Book book : books2)
-            customerBooksTable.getItems().add(book);
-        
+        //Determining what instance variables go into each column
         nameCustColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceCustColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        selectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
+        
+        customerBooksTable.getItems().addAll(Books.bookList);
+        
+        //adding the columsn to the table
         customerBooksTable.getColumns().addAll(nameCustColumn, priceCustColumn, selectColumn);
         
+        //adding the table to the container
         customerStartScreenHB.getChildren().add(customerBooksTable);
         customerStartScreenHB.setAlignment(Pos.CENTER);
         
+        //making a container to contain the buy and redeem buttons
         HBox buyRedeemHB = new HBox(5);
         
         //Making the different buttons
         Button buyBtn = new Button();
         buyBtn.setText("Buy");
         buyBtn.setPrefWidth(100);
+        buyBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
         Button buyRBtn = new Button();
         buyRBtn.setText("Redeem Points & Buy");
         buyRBtn.setPrefWidth(170);
+        buyRBtn.setStyle("-fx-background-color: #C8A2C8; -fx-background-radius: 100;");
+        
+        //addign the buttons to the container
         buyRedeemHB.getChildren().addAll(buyBtn, buyRBtn);
         buyRedeemHB.setAlignment(Pos.CENTER);
         VBox.setMargin(customerStartScreenHB, new Insets(15, 15, 15, 15));
         
+        //makign the logout button
         Button logoutCBtn = new Button();
         logoutCBtn.setText("Logout");
         logoutCBtn.setPrefWidth(100);
@@ -216,25 +230,44 @@ public class Bookstore extends Application {
         
         //Logic and control for the buttons
         buyBtn.setOnAction((ActionEvent event) -> {
-            System.out.println("Buy Button Pressed");
-            customerCostScreen(primaryStage);
+            ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
+            for(Book b : Books.bookList){
+                if(b.getSelect().isSelected())
+                    selectedBooks.add(b);
+            }
+            if(selectedBooks.isEmpty()){
+                System.out.println("Nothign selected");
+            }else{
+                System.out.println("Buy and redeem Button Pressed");
+                customerCostScreen(primaryStage, customer, selectedBooks, true);
+            }customerCostScreen(primaryStage, customer, selectedBooks, false);
         });
+        
         buyRBtn.setOnAction((ActionEvent event) -> {
-            System.out.println("Buy and Redeem button Pressed");
-            customerCostScreen(primaryStage);
+            ObservableList<Book> selectedBooks = FXCollections.observableArrayList();
+            for(Book b : Books.bookList){
+                if(b.getSelect().isSelected())
+                    selectedBooks.add(b);
+            }
+            if(selectedBooks.isEmpty()){
+                System.out.println("Nothign selected");
+            }else{
+                System.out.println("Buy and redeem Button Pressed");
+                customerCostScreen(primaryStage, customer, selectedBooks, true);
+            }
         });
         logoutCBtn.setOnAction((ActionEvent event) -> {
             System.out.println("Logout Button on Customer start Pressed");
             start(primaryStage);
         });
         
-        //placing the elements on screen
+        //placing the containers on screen
         customerMenuRoot.getChildren().add(welcomeMessage);
         customerMenuRoot.getChildren().add(customerStartScreenHB);
-        //CHEKCBOX STILL MISSINGSDPFIJFSPDOFJSODPFJOFJSPDFOJSODFJ
         customerMenuRoot.getChildren().add(buyRedeemHB);
         customerMenuRoot.getChildren().add(logoutCBtn);
         
+        //adding the screen to the window
         primaryStage.setTitle(title);
         primaryStage.setScene(customerMenu);
         primaryStage.show();
@@ -244,22 +277,35 @@ public class Bookstore extends Application {
         
         
         //-----------------------Customer Cost Screen---------------------------
-    public void customerCostScreen(Stage primaryStage){
-        VBox customerCostRoot = new VBox(5);
+    public void customerCostScreen(Stage primaryStage, Customer currentCustomer, ObservableList<Book> selected, boolean Redeem){
+        //Setting up the screen
+        VBox customerCostRoot = new VBox(10);
         customerCostRoot.setAlignment(Pos.CENTER);
         Scene customerCost = new Scene(customerCostRoot, 600, 400);
-        //Making the variable 
+        
+        //Making the variables 
         double totalCost = 0;
-        int points = 19;
-        String status = "bub";
+        String costBreakdown = "";
+        
+        for(Book b : selected){
+            totalCost += b.getPrice();
+            costBreakdown = costBreakdown + (selected.indexOf(b)+1) +": " + b.getName() + " for $" + b.getPrice() + "\n";
+            b.resetCheck();
+        }
+        
         //labels displaying the cost
+        Label intro = new Label("Thank you for shopping with us "+ currentCustomer.getUsername() +", here is the breakdown of your purchase: ");
+        Label breakdown = new Label(costBreakdown);
+        VBox.setMargin(breakdown, new Insets(0, 0, 20, 0));
         Label costL = new Label("Total Cost: " + totalCost);
-        Label pointsL = new Label("Points: " + points + ", Status: " + status + ".");
+        Label pointsL = new Label("Points: " + currentCustomer.getPoints() + ", Status: " + currentCustomer.getState().getStatus() + ".");
         
         //creating button
         Button logoutCCBtn = new Button();
         logoutCCBtn.setText("Logout");
         logoutCCBtn.setStyle("-fx-background-color: #EA3B52; -fx-background-radius: 100;");
+        logoutCCBtn.setPrefWidth(100);
+        logoutCCBtn.setPrefHeight(50);
         
         //Logic for button
         logoutCCBtn.setOnAction((ActionEvent event) -> {
@@ -268,10 +314,13 @@ public class Bookstore extends Application {
         });
         
         //placing the elements on screen
+        customerCostRoot.getChildren().add(intro);
+        customerCostRoot.getChildren().add(breakdown);
         customerCostRoot.getChildren().add(costL);
         customerCostRoot.getChildren().add(pointsL);
         customerCostRoot.getChildren().add(logoutCCBtn);
         
+        //Placing the screen on the window
         primaryStage.setTitle(title);
         primaryStage.setScene(customerCost);
         primaryStage.show();
@@ -296,22 +345,19 @@ public class Bookstore extends Application {
         
         //Creating columns for the table
         TableColumn<User, String> nameColumn = new TableColumn<>("Book Name");
-        nameColumn.setPrefWidth(200);
+        nameColumn.setPrefWidth(300);
         TableColumn<User, String> priceColumn = new TableColumn<>("Book Price");
-        priceColumn.setPrefWidth(100);
-        TableColumn<User, String> selectColumn = new TableColumn<>("Select");
         priceColumn.setPrefWidth(100);
         
         //filling the table's columns using the "getName()" & "getPrice() & getSelect()" 
         //methods from the Book class
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        selectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
 
-        bookTable.getItems().addAll(Books.bookList); //**
+        bookTable.getItems().addAll(Books.bookList);
         
         //adds the columns to the table, and then the table to the container
-        bookTable.getColumns().addAll(nameColumn, priceColumn, selectColumn);
+        bookTable.getColumns().addAll(nameColumn, priceColumn);
         tableHB.setAlignment(Pos.CENTER);
         tableHB.getChildren().add(bookTable);
         VBox.setMargin(tableHB, new Insets(10, 0, 20, 0));
@@ -368,35 +414,28 @@ public class Bookstore extends Application {
         //Control for the buttons
         addBtn.setOnAction((ActionEvent event) -> {
             try{
-                Books.bookList.add(new Book(bookNameTF.getText(), Integer.parseInt(bookPriceTF.getText())));//**
-                
+                if(bookNameTF.getText().equals("") || bookPriceTF.getText().equals("")) throw new Exception();                
+                Books.bookList.add(new Book(bookNameTF.getText(), Integer.parseInt(bookPriceTF.getText())));
                 ownerBooksScreen(primaryStage);
             }catch (Exception e){
                 System.out.println("INVALID ARGUMENT");
             }
         });
         
-        //Delete function is uncessarily complicated and wasteful, I'll redo it if i have time
         deleteBtn.setOnAction((ActionEvent event) -> {
-            
-            ObservableList<Book> placeholderList = FXCollections.observableArrayList();
-            
-            for(int i = 0; i < Books.bookList.size(); i++){//**
-                if(!Books.bookList.get(i).getSelect().isSelected()){
-                    placeholderList.add(Books.bookList.get(i));
-                    System.out.println(Books.bookList.get(i).getName());
-                }
-            }
-            Books.bookList.clear();
-            for(int i = 0; i < placeholderList.size(); i++){
-                Books.bookList.add(placeholderList.get(i));
-            }
-            placeholderList.clear();
+            try{
+            Books.bookList.remove(bookTable.getSelectionModel().getSelectedIndex());
             ownerBooksScreen(primaryStage);
             System.out.println("Delete Button Pressed");
+            }catch(Exception e){
+                System.out.println("Nothign selected");
+            }
         });
         backBtn.setOnAction((ActionEvent event) -> {
-            System.out.println(bookNameTF.getText());
+            System.out.println("Back Button Pressed");
+            for(Book b : Books.bookList){
+                b.resetCheck();
+            }
             ownerStartScreen(primaryStage);
         });
         
@@ -421,25 +460,22 @@ public class Bookstore extends Application {
         //Setting up the table and its columns
         TableView customerTable = new TableView();
         TableColumn<Customer, String> usernameColumn = new TableColumn<>("Username");
-        usernameColumn.setPrefWidth(100);
+        usernameColumn.setPrefWidth(200);
         TableColumn<Customer, String> passwordColumn = new TableColumn<>("Password");
         passwordColumn.setPrefWidth(100);
         TableColumn<Customer, String> pointsColumn = new TableColumn<>("Points");
-        pointsColumn.setPrefWidth(100);
-        TableColumn<Customer, String> selectColumn = new TableColumn<>("Select");
         pointsColumn.setPrefWidth(100);
         
         //Choosing which instance variables from Customer to put into the columns
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         pointsColumn.setCellValueFactory(new PropertyValueFactory<>("points"));
-        selectColumn.setCellValueFactory(new PropertyValueFactory<>("select"));
         
         //Adds the actual instances of custoemrs to the table
         customerTable.getItems().addAll(Customers.customerList);
         
         //adds the columns to the table
-        customerTable.getColumns().addAll(usernameColumn, passwordColumn, pointsColumn, selectColumn);
+        customerTable.getColumns().addAll(usernameColumn, passwordColumn, pointsColumn);
         
         //adds the table to the container, and styles it a bit
         tableCHB.getChildren().add(customerTable);
@@ -499,6 +535,7 @@ public class Bookstore extends Application {
         addCBtn.setOnAction((ActionEvent event) -> {
             System.out.println("Add button Pressed");
             try{
+                if(customerNameTF.getText().equals("") || customerPasswordTF.getText().equals("")) throw new Exception();
                 Customers.customerList.add(new Customer(customerNameTF.getText(), customerPasswordTF.getText(), 0));
                 ownerCustomersScreen(primaryStage);
             }catch (Exception e){
@@ -506,26 +543,19 @@ public class Bookstore extends Application {
             }
         });
         deleteCBtn.setOnAction((ActionEvent event) -> {
-            
-            ObservableList<Customer> placeholderCustomerList2 = FXCollections.observableArrayList();
-            
-            for(int i = 0; i < Customers.customerList.size(); i++){//**
-                if(!Customers.customerList.get(i).getSelect().isSelected()){
-                    placeholderCustomerList2.add(Customers.customerList.get(i));
-                    System.out.println(Customers.customerList.get(i).getUsername());
-                }
+            try{
+                Customers.customerList.remove(customerTable.getSelectionModel().getSelectedIndex());
+                ownerCustomersScreen(primaryStage);
+                System.out.println("Delete Button Pressed");
+            }catch(Exception e){
+                System.out.println("Nothign selected");
             }
-            Customers.customerList.clear();
-            for(int i = 0; i < placeholderCustomerList2.size(); i++){
-                Customers.customerList.add(placeholderCustomerList2.get(i));
-            }
-            placeholderCustomerList2.clear();
-            ownerCustomersScreen(primaryStage);
-            System.out.println("Delete button Pressed");
-            
         });
         backCBtn.setOnAction((ActionEvent event) -> {
             System.out.println("Back button Pressed");
+            for(Customer c : Customers.customerList){
+                c.resetCheck();
+            }
             ownerStartScreen(primaryStage);
         });
         
