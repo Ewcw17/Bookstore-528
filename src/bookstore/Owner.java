@@ -7,6 +7,7 @@ package bookstore;
 import bookstore.Customers;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.stage.Stage;
 
 /**
  *
@@ -19,29 +20,24 @@ public class Owner extends User {
     public Owner(String username, String password) {
         super(username, password);
     }
+    
     // throw errors for deleting admin and duplicates
-    void addCustomer(String username, String password) throws IOException {        
+    void addCustomer(String username, String password){        
         Customer customer = new Customer(username, password, 0);
         Customers.customerList.add(customer);
-        Customers.customerWrite();  // No need to modify method calls
     }
 
-    void deleteCustomer(String username, String password) throws IOException {
-        Customer customer = new Customer(username, password, 0);
-        Customers.customerList.remove(customer);
-        Customers.customerWrite();
+    void deleteCustomer(int index){
+        Customers.customerList.remove(index);
     }
     // throw errors for duplicates and bookPrice below 0
-    void addBook(String bookName, int bookPrice) throws IOException {
+    void addBook(String bookName, int bookPrice){
         Book book = new Book(bookName, bookPrice);
         Books.bookList.add(book);
-        Books.bookWrite();
     }
     
-    void deleteBook(String bookName, int bookPrice) throws IOException {
-        Book book = new Book(bookName, bookPrice);
-        Books.bookList.remove(book);
-        Books.bookWrite();
+    void deleteBook(int index){
+        Books.bookList.remove(index);
     }
     
 }

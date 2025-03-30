@@ -1,9 +1,10 @@
-The Bible, 2
-The Quran, 10000
-Dynamics Textbook, 10
-Harry Potter and the Prisoner of Azkaban, 20
-Quotations by Chairman Mao, 50
-Lolita, 30
-Diary of a Wimpy Kid, 10
-Frankenstein, 30
-Dracula, 25
+The Quran,10000
+Quotations by Chairman Mao,50
+Lolita,30
+Diary of a Wimpy Kid,10
+Frankenstein,30
+Dracula,25
+Harry Potter and the Sorcerer's Stone,20
+Statics Textbook,12
+1984,15
+The Torah,30

@@ -5,8 +5,6 @@
 package bookstore;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import javafx.scene.control.CheckBox;
 
 /**
  *
@@ -17,14 +15,16 @@ import javafx.scene.control.CheckBox;
 public class Customer extends User{
     private int points;
     private Status state;
-    private CheckBox select;
     
     public Customer(String username, String password, int points) {
         super(username, password);
         this.points = points;
-        this.select = new CheckBox();
         this.state = new Status();
         this.state.manageStatus(this.points);
+    }
+    
+    boolean ownerLogin(){
+        return false;
     }
     
     public int getPoints(){
@@ -43,23 +43,15 @@ public class Customer extends User{
         return password;
     }
     
-    public CheckBox getSelect(){
-        return select;
-    }
-    
-    public void resetCheck(){
-        select.setSelected(false);
-    }
-    
-    void buy(Book book) throws IOException {
+    public int buy(Book book){
         int totalCost = book.getPrice();
         points += (totalCost * 10);
         state.manageStatus(points);
-        Books.bookList.remove(book);
-        //Books.bookWrite();
+        
+        return totalCost;
     }
     
-    void redeemBuy(Book book) throws IOException {
+    public int redeemBuy(Book book){
         int totalCost;
         if (book.getPrice() - points/100 <= 0) {
             points -= book.getPrice() * 100;
@@ -67,14 +59,13 @@ public class Customer extends User{
         }
         
         else {
-            points = 0;
             totalCost = book.getPrice() - points/100;
+            points = (points%100);
             
         }
         state.manageStatus(points);
-        Books.bookList.remove(book);
-        //Books.bookWrite();
-        //buy multiple
+        
+        return totalCost;
     }
     
 }

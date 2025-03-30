@@ -1,3 +1,5 @@
-Ethan, Butthole, 1000
-Ernest, Smelly, 500
-Leo, Poopy, 2000
+Ethan, Password123, 100020
+Ernest, Igot19onmyMidterm, 1500
+Leo, G%e3Bh20, 2000
+Anith, Coolio, 68500
+Jordon, IluvELE, 120

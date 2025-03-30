@@ -19,7 +19,7 @@ public class Books {
     public static ArrayList<Book> bookList = new ArrayList<Book>();
     
     static void bookWrite() throws IOException {
-        FileWriter bookWrite = new FileWriter("books.txt");
+        FileWriter bookWrite = new FileWriter("Books.txt");
         for (int i = 0; i < bookList.size(); i++) {
             bookWrite.write(bookList.get(i).getName() + "," + bookList.get(i).getPrice() + "\n");
         }

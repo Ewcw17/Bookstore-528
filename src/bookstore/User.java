@@ -4,11 +4,13 @@
  */
 package bookstore;
 
+import javafx.stage.Stage;
+
 /**
  *
  * @author elchoi
  */
-public class User {
+public abstract class User {
     protected String username;
     protected String password;
     
@@ -23,14 +25,6 @@ public class User {
     
     public String getPassword(){
         return password;
-    }
-    
-    void login() {
-        
-    }
-    
-    void logout() {
-        
     }
 
 }

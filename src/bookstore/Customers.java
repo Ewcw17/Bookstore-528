@@ -16,9 +16,9 @@ public class Customers {
     public static ArrayList<Customer> customerList = new ArrayList<Customer>();
     
     static void customerWrite() throws IOException {
-        FileWriter customerWrite = new FileWriter("customers.txt");
+        FileWriter customerWrite = new FileWriter("Customers.txt");
         for (int i = 0; i < customerList.size(); i++) {
-            customerWrite.write(customerList.get(i).getUsername() + "," + customerList.get(i).getPoints() + "," + customerList.get(i).getState().getStatus() + "\n");
+            customerWrite.write(customerList.get(i).getUsername() + ", " + customerList.get(i).getPassword() + ", " + customerList.get(i).getPoints() + "\n");
         }
         customerWrite.close();
     }

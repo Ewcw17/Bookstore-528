@@ -24,6 +24,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.util.*;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -34,6 +36,8 @@ public class Bookstore extends Application {
     
     String title = "Bookstore App";
     
+    Owner owner = new Owner("admin", "admin");
+    
     @Override
         //-----------------------LOGIN SCREEN-----------------------------------
     public void start(Stage primaryStage){
@@ -42,7 +46,8 @@ public class Bookstore extends Application {
         Scene loginScreen = new Scene(loginRoot, 600, 400);
         
         Label introMessage = new Label("Welcome to the Chinese Bookstore");
-        Label invalidMessage = new Label("Unrecognised login");
+        Label invalid = new Label("");
+        GridPane.setMargin(invalid, new Insets(10, 0, 20, 0));
         
         //Labels for the textfields
         Label username = new Label("Username:");
@@ -72,12 +77,13 @@ public class Bookstore extends Application {
         loginRoot.add(password, 3, 6);
         loginRoot.add(passwordTF, 4, 6);
         loginRoot.add(loginBtn, 4, 7);
+        loginRoot.add(invalid, 4, 9, 2, 1);
 
         //Controls what the login button does
         loginBtn.setOnAction((ActionEvent event) -> {
             System.out.println("login button pressed");
             System.out.println(usernameTF.getText());
-            if(usernameTF.getText().equals("admin") && passwordTF.getText().equals("admin")){
+            if(usernameTF.getText().equals(owner.getUsername()) && passwordTF.getText().equals(owner.getPassword())){
                 ownerStartScreen(primaryStage);
             }else{
                 for(Customer c : Customers.customerList){
@@ -86,7 +92,8 @@ public class Bookstore extends Application {
                         break;
                     }
                 }
-                //Need to show that invalid login was processed
+                invalid.setText("Unrecognised login");
+                invalid.setTextFill(Color.color(Math.random(), Math.random(), Math.random()));
             }
         });
         loginScreen.setOnKeyPressed(e -> {
@@ -101,6 +108,8 @@ public class Bookstore extends Application {
                             break;
                         }
                     }
+                    invalid.setText("Unrecognised login");
+                    invalid.setTextFill(Color.color(Math.random(), Math.random(), Math.random()));
                 }
             }
 
@@ -109,6 +118,15 @@ public class Bookstore extends Application {
         primaryStage.setTitle(title);
         primaryStage.setScene(loginScreen);
         primaryStage.show();
+        
+        primaryStage.setOnCloseRequest(event -> {
+            try{
+                Books.bookWrite();
+                Customers.customerWrite();
+            }catch (Exception e){
+                System.out.println("Write failed");
+            }
+        });
         
     }
         //-----------------------LOGIN SCREEN-----------------------------------
@@ -161,6 +179,15 @@ public class Bookstore extends Application {
         primaryStage.setScene(ownerMenu);
         primaryStage.show();
         
+        primaryStage.setOnCloseRequest(event -> {
+            try{
+                Books.bookWrite();
+                Customers.customerWrite();
+            }catch (Exception e){
+                System.out.println("Write failed");
+            }
+        });
+        
     }
         //-----------------------Owner Start Screen-----------------------------
         
@@ -174,7 +201,11 @@ public class Bookstore extends Application {
         
         //creating the welcome text
         Label welcomeMessage = new Label("Welcome " + customer.getUsername() + ", you have " + customer.getPoints() + " points. Your status is: " + customer.getState().getStatus() + ".");
-        VBox.setMargin(welcomeMessage, new Insets(25, 15, 15, 15));
+        VBox.setMargin(welcomeMessage, new Insets(25, 15, 0, 15));
+        
+        //Creating error message
+        Label invalid = new Label("");
+        VBox.setMargin(invalid, new Insets(0, 0, 20, 0));
         
         //creating a container to hold the table within
         HBox customerStartScreenHB = new HBox();
@@ -236,11 +267,13 @@ public class Bookstore extends Application {
                     selectedBooks.add(b);
             }
             if(selectedBooks.isEmpty()){
+                invalid.setText("You must select 1 or more books");
+                invalid.setTextFill(Color.color(Math.random(), Math.random(), Math.random()));
                 System.out.println("Nothign selected");
             }else{
-                System.out.println("Buy and redeem Button Pressed");
-                customerCostScreen(primaryStage, customer, selectedBooks, true);
-            }customerCostScreen(primaryStage, customer, selectedBooks, false);
+                System.out.println("Buy Button Pressed");
+                customerCostScreen(primaryStage, customer, selectedBooks, false);
+            }
         });
         
         buyRBtn.setOnAction((ActionEvent event) -> {
@@ -250,6 +283,8 @@ public class Bookstore extends Application {
                     selectedBooks.add(b);
             }
             if(selectedBooks.isEmpty()){
+                invalid.setText("You must select 1 or more books");
+                invalid.setTextFill(Color.color(Math.random(), Math.random(), Math.random()));
                 System.out.println("Nothign selected");
             }else{
                 System.out.println("Buy and redeem Button Pressed");
@@ -266,11 +301,21 @@ public class Bookstore extends Application {
         customerMenuRoot.getChildren().add(customerStartScreenHB);
         customerMenuRoot.getChildren().add(buyRedeemHB);
         customerMenuRoot.getChildren().add(logoutCBtn);
+        customerMenuRoot.getChildren().add(invalid);
         
         //adding the screen to the window
         primaryStage.setTitle(title);
         primaryStage.setScene(customerMenu);
         primaryStage.show();
+        
+        primaryStage.setOnCloseRequest(event -> {
+            try{
+                Books.bookWrite();
+                Customers.customerWrite();
+            }catch (Exception e){
+                System.out.println("Write failed");
+            }
+        });
         
     }
         //-----------------------Customer Start Screen--------------------------
@@ -284,20 +329,25 @@ public class Bookstore extends Application {
         Scene customerCost = new Scene(customerCostRoot, 600, 400);
         
         //Making the variables 
-        double totalCost = 0;
+        int totalCost = 0;
+        int originalCost = 0;
         String costBreakdown = "";
         
         for(Book b : selected){
-            totalCost += b.getPrice();
+            if(Redeem){
+                totalCost += currentCustomer.redeemBuy(b);
+                originalCost += b.getPrice();
+            }else{
+                totalCost += currentCustomer.buy(b);
+            }
             costBreakdown = costBreakdown + (selected.indexOf(b)+1) +": " + b.getName() + " for $" + b.getPrice() + "\n";
-            b.resetCheck();
         }
-        
         //labels displaying the cost
         Label intro = new Label("Thank you for shopping with us "+ currentCustomer.getUsername() +", here is the breakdown of your purchase: ");
         Label breakdown = new Label(costBreakdown);
         VBox.setMargin(breakdown, new Insets(0, 0, 20, 0));
-        Label costL = new Label("Total Cost: " + totalCost);
+        Label redemption = new Label((originalCost-totalCost)*100 + " points were used to discount your purchase by $" + (originalCost-totalCost) +".");
+        Label costL = new Label("Total Cost: $" + totalCost);
         Label pointsL = new Label("Points: " + currentCustomer.getPoints() + ", Status: " + currentCustomer.getState().getStatus() + ".");
         
         //creating button
@@ -309,6 +359,8 @@ public class Bookstore extends Application {
         
         //Logic for button
         logoutCCBtn.setOnAction((ActionEvent event) -> {
+            for(Book b : Books.bookList)
+                b.resetCheck();
             System.out.println("Logout Button on Customer Cost Pressed");
             start(primaryStage);
         });
@@ -316,6 +368,7 @@ public class Bookstore extends Application {
         //placing the elements on screen
         customerCostRoot.getChildren().add(intro);
         customerCostRoot.getChildren().add(breakdown);
+        if(Redeem) customerCostRoot.getChildren().add(redemption);
         customerCostRoot.getChildren().add(costL);
         customerCostRoot.getChildren().add(pointsL);
         customerCostRoot.getChildren().add(logoutCCBtn);
@@ -324,6 +377,15 @@ public class Bookstore extends Application {
         primaryStage.setTitle(title);
         primaryStage.setScene(customerCost);
         primaryStage.show();
+        
+        primaryStage.setOnCloseRequest(event -> {
+            try{
+                Books.bookWrite();
+                Customers.customerWrite();
+            }catch (Exception e){
+                System.out.println("Write failed");
+            }
+        });
         
     }
         //-----------------------Customer Cost Screen---------------------------
@@ -335,6 +397,10 @@ public class Bookstore extends Application {
         VBox ownerBooksRoot = new VBox(10);
         ownerBooksRoot.setAlignment(Pos.CENTER);
         Scene ownerBooks = new Scene(ownerBooksRoot, 600, 400);
+        
+        //Creating error message
+        Label invalid = new Label("");
+        VBox.setMargin(invalid, new Insets(10, 0, 20, 0));
         
         //Container to put the table into so it doesn't stretch the whole screen
         HBox tableHB = new HBox();
@@ -410,24 +476,35 @@ public class Bookstore extends Application {
         ownerBooksRoot.getChildren().add(tableHB);
         ownerBooksRoot.getChildren().add(addingBooksHB);
         ownerBooksRoot.getChildren().add(backDeleteHB);
+        ownerBooksRoot.getChildren().add(invalid);
         
         //Control for the buttons
         addBtn.setOnAction((ActionEvent event) -> {
             try{
-                if(bookNameTF.getText().equals("") || bookPriceTF.getText().equals("")) throw new Exception();                
-                Books.bookList.add(new Book(bookNameTF.getText(), Integer.parseInt(bookPriceTF.getText())));
+                if(bookNameTF.getText().equals("") || bookPriceTF.getText().equals("")) throw new Exception();
+                //Checking for duplicates
+                for(Book b : Books.bookList){
+                    if(bookNameTF.getText().equals(b.getName())){
+                        throw new Exception();
+                    }
+                }
+                owner.addBook(bookNameTF.getText(), Integer.parseInt(bookPriceTF.getText()));
                 ownerBooksScreen(primaryStage);
             }catch (Exception e){
+                invalid.setText("Invalid Input");
+                invalid.setTextFill(Color.color(Math.random(), Math.random(), Math.random()));
                 System.out.println("INVALID ARGUMENT");
             }
         });
         
         deleteBtn.setOnAction((ActionEvent event) -> {
             try{
-            Books.bookList.remove(bookTable.getSelectionModel().getSelectedIndex());
+            owner.deleteBook(bookTable.getSelectionModel().getSelectedIndex());
             ownerBooksScreen(primaryStage);
             System.out.println("Delete Button Pressed");
             }catch(Exception e){
+                invalid.setText("You must select something to delete");
+                invalid.setTextFill(Color.color(Math.random(), Math.random(), Math.random()));
                 System.out.println("Nothign selected");
             }
         });
@@ -444,6 +521,15 @@ public class Bookstore extends Application {
         primaryStage.setScene(ownerBooks);
         primaryStage.show();
         
+        primaryStage.setOnCloseRequest(event -> {
+            try{
+                Books.bookWrite();
+                Customers.customerWrite();
+            }catch (Exception e){
+                System.out.println("Write failed");
+            }
+        });
+        
     }
         //-----------------------Owner Books Screen-----------------------------
         
@@ -453,6 +539,10 @@ public class Bookstore extends Application {
         //Setting up scenes
         VBox ownerCustomersRoot = new VBox(10);
         Scene ownerCustomers = new Scene(ownerCustomersRoot, 600, 400);
+        
+        //Error message for invalid input
+        Label invalid = new Label("");
+        VBox.setMargin(invalid, new Insets(10, 0, 20, 0));
         
         //Containter to hold the table
         HBox tableCHB = new HBox();
@@ -529,6 +619,7 @@ public class Bookstore extends Application {
         ownerCustomersRoot.getChildren().add(tableCHB);
         ownerCustomersRoot.getChildren().add(textFieldCHB);
         ownerCustomersRoot.getChildren().add(backDeleteCHB);
+        ownerCustomersRoot.getChildren().add(invalid);
         ownerCustomersRoot.setAlignment(Pos.CENTER);
         
         //Control for the buttons
@@ -536,26 +627,28 @@ public class Bookstore extends Application {
             System.out.println("Add button Pressed");
             try{
                 if(customerNameTF.getText().equals("") || customerPasswordTF.getText().equals("")) throw new Exception();
-                Customers.customerList.add(new Customer(customerNameTF.getText(), customerPasswordTF.getText(), 0));
+                owner.addCustomer(customerNameTF.getText(), customerPasswordTF.getText());
                 ownerCustomersScreen(primaryStage);
             }catch (Exception e){
+                invalid.setText("Username or Password cannot be empty");
+                invalid.setTextFill(Color.color(Math.random(), Math.random(), Math.random()));
                 System.out.println("INVALID ARGUMENT");
             }
         });
+        
         deleteCBtn.setOnAction((ActionEvent event) -> {
             try{
-                Customers.customerList.remove(customerTable.getSelectionModel().getSelectedIndex());
+                owner.deleteCustomer(customerTable.getSelectionModel().getSelectedIndex());
                 ownerCustomersScreen(primaryStage);
                 System.out.println("Delete Button Pressed");
             }catch(Exception e){
+                invalid.setText("You must select something to Delete");
+                invalid.setTextFill(Color.color(Math.random(), Math.random(), Math.random()));
                 System.out.println("Nothign selected");
             }
         });
         backCBtn.setOnAction((ActionEvent event) -> {
             System.out.println("Back button Pressed");
-            for(Customer c : Customers.customerList){
-                c.resetCheck();
-            }
             ownerStartScreen(primaryStage);
         });
         
@@ -563,6 +656,15 @@ public class Bookstore extends Application {
         primaryStage.setTitle(title);
         primaryStage.setScene(ownerCustomers);
         primaryStage.show();
+        
+        primaryStage.setOnCloseRequest(event -> {
+            try{
+                Books.bookWrite();
+                Customers.customerWrite();
+            }catch (Exception e){
+                System.out.println("Write failed");
+            }
+        });
         
     }
         //-----------------------Owner Customers Screen-------------------------
