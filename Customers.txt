@@ -1,5 +1,6 @@
-Ethan, Password123, 100020
-Ernest, Igot19onmyMidterm, 1500
+Ethan, Password123, 89320
+Ernest, Igot19onmyMidterm, 20
 Leo, G%e3Bh20, 2000
 Anith, Coolio, 68500
 Jordon, IluvELE, 120
+Michael, Jantzi, 0

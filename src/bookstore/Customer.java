@@ -23,10 +23,6 @@ public class Customer extends User{
         this.state.manageStatus(this.points);
     }
     
-    boolean ownerLogin(){
-        return false;
-    }
-    
     public int getPoints(){
         return points;
     }
@@ -61,6 +57,8 @@ public class Customer extends User{
         else {
             totalCost = book.getPrice() - points/100;
             points = (points%100);
+            points += (totalCost * 10);
+            state.manageStatus(points);
             
         }
         state.manageStatus(points);
