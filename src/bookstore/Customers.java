@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author lemme eyp
+ * @author lemme escort you out of the building
  */
 public class Customers {
     public static ArrayList<Customer> customerList = new ArrayList<Customer>();
