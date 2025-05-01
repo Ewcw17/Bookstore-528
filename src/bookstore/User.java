@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author elchoi
+ * @author I COPIED THIS ENTIRE PROJECT OFF GITHUB
  */
 public abstract class User {
     protected String username;

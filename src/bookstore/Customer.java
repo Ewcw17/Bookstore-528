@@ -8,8 +8,8 @@ import java.io.IOException;
 
 /**
  *
- * @author elchoi
- */
+ * @author CAN I DRINK YOUR CUMMMM>?????
+ **/
 
 
 public class Customer extends User{

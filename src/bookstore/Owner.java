@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author elchoi
+ * @author MR TMEMEU HIMSELF
  */
 public class Owner extends User {
     private String username = "admin";

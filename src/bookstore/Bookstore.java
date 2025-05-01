@@ -29,7 +29,7 @@ import javafx.scene.paint.Color;
 
 /**
  *
- * @author e225wong
+ * @author EC, EW and LL
  */
 
 public class Bookstore extends Application {

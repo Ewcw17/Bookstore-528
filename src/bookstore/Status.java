@@ -6,7 +6,7 @@ package bookstore;
 
 /**
  *
- * @author elchoi
+ * @author I like poopy in my pants
  */
 public class Status{
     String status;

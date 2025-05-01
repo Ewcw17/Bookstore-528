@@ -7,7 +7,7 @@ package bookstore;
 import javafx.scene.control.CheckBox;
 /**
  *
- * @author elchoi
+ * @author pooped my pants
  */
 public class Book {
     private String bookName;
