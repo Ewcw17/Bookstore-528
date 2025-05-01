@@ -6,7 +6,7 @@ package bookstore;
 
 /**
  *
- * @author I like poopy in my pants
+ * @author chercher la paix mentale est ce que j'essaye de faire
  */
 public class Status{
     String status;
